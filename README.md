@@ -2,7 +2,7 @@
 
 * **Autor**: [Andres Solorzano](https://www.linkedin.com/in/aosolorzano/).
 * **Nivel**: Intermedio.
-* **Tecnologías**: Java, Spring Boot, Spring Native, Spring WebFlux, Quartz, Flyway, Testcontainers, Postgres, DynamoDB and Docker.
+* **Tecnologías**: Java, Spring Boot, Spring Native, Spring WebFlux, Flyway, Testcontainers, Postgres and Docker.
 
 ---
 
@@ -12,12 +12,7 @@ The idea is to use a TDD methodology from the beginning with the support of Test
 This project also uses Docker with the compose plugin to deploy a local cluster alongside the other required services by the Spring Boot microservice.
 
 ### Running the application using Docker Compose
-First, generate the Spring Native image:
-```bash
-./mvnw clean -Pnative native:compile
-```
-
-Then, execute the following command from the root of the project:
+Execute the following command from the root of the project:
 ```bash
 docker compose up --build
 ```
