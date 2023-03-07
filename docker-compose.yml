@@ -1,0 +1,51 @@
+version: '3.9'
+
+networks:
+  reto-network:
+    driver: bridge
+
+services:
+  reto-postgres:
+    image: postgres:14.4
+    container_name: reto-postgres
+    environment:
+      - POSTGRES_DB=PichinchaBankDB
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres123
+    ports:
+      - "5432:5432"
+    networks:
+      - reto-network
+
+  reto-pgadmin:
+    image: dpage/pgadmin4
+    container_name: reto-pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=user@domain.com
+      - PGADMIN_DEFAULT_PASSWORD=admin123
+    volumes:
+      - ./utils/docker-volume/pgadmin:/var/lib/pgadmin
+    ports:
+      - "9000:80"
+    depends_on:
+      - reto-postgres
+    networks:
+      - reto-network
+
+  reto-api:
+    image: aosolorzano/reto-app:1.0.0
+    container_name: reto-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - RETO_TIME_ZONE_ID=-05:00
+      - RETO_DB_CLUSTER_SECRET={"dbClusterIdentifier":"reto-db-cluster","password":"postgres123","dbname":"PichinchaBankDB","engine":"postgres","port":5432,"host":"reto-postgres","username":"postgres"}
+    depends_on:
+      - reto-postgres
+      - reto-pgadmin
+    ports:
+      - "8080:8080"
+    networks:
+      - reto-network
