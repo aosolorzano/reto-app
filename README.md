@@ -2,7 +2,7 @@
 
 * **Autor**: [Andres Solorzano](https://www.linkedin.com/in/aosolorzano/).
 * **Nivel**: Intermedio.
-* **Tecnologías**: Java, Spring Boot, Spring Native, Spring WebFlux, Flyway, Testcontainers, Postgres and Docker.
+* **Tecnologías**: Java, Spring Boot, Spring Native, Spring WebFlux, Testcontainers, Postgres and Docker.
 
 ---
 
@@ -27,7 +27,6 @@ For further reference, please consider the following sections:
 * [Testcontainers Postgres Module Reference Guide](https://www.testcontainers.org/modules/databases/postgres/)
 * [Spring Reactive Web](https://docs.spring.io/spring-boot/docs/3.0.4/reference/htmlsingle/#web.reactive)
 * [Spring Data JPA](https://docs.spring.io/spring-boot/docs/3.0.4/reference/htmlsingle/#data.sql.jpa-and-spring-data)
-* [Flyway Migration](https://docs.spring.io/spring-boot/docs/3.0.4/reference/htmlsingle/#howto.data-initialization.migration-tool.flyway)
 * [Validation](https://docs.spring.io/spring-boot/docs/3.0.4/reference/htmlsingle/#io.validation)
 * [Testcontainers](https://www.testcontainers.org/)
 
