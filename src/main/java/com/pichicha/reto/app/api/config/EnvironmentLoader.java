@@ -1,7 +1,7 @@
 package com.pichicha.reto.app.api.config;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.pichicha.reto.app.api.utils.EnvironmentUtil;
+import com.pichicha.reto.app.api.utils.EnvUtil;
 import com.pichicha.reto.app.api.vo.AuroraPostgresSecretVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public final class EnvironmentLoader {
     }
 
     private static void settingJdbcConnection() throws JsonProcessingException {
-        AuroraPostgresSecretVO auroraSecretVO = EnvironmentUtil.getAuroraSecretVO();
+        AuroraPostgresSecretVO auroraSecretVO = EnvUtil.getAuroraSecretVO();
         if (Objects.nonNull(auroraSecretVO)) {
             String sqlConnection = MessageFormat.format(JDBC_SQL_CONNECTION, auroraSecretVO.host(),
                     auroraSecretVO.port(), auroraSecretVO.dbname());
@@ -36,7 +36,7 @@ public final class EnvironmentLoader {
     }
 
     private static void settingDefaultTimeZone() {
-        String timeZoneId = EnvironmentUtil.getTimeZoneId();
+        String timeZoneId = EnvUtil.getTimeZoneId();
         if (Objects.nonNull(timeZoneId)) {
             LOGGER.debug("Time Zone ID found: {}", timeZoneId);
             System.setProperty("reto.time.zone.id", timeZoneId);

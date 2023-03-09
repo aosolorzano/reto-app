@@ -2,7 +2,7 @@ package com.pichicha.reto.app.api.exception;
 
 import com.pichicha.reto.app.api.dto.ErrorDetailsDTO;
 import com.pichicha.reto.app.api.utils.ErrorUtil;
-import com.pichicha.reto.app.api.utils.enums.ValidationErrorEnum;
+import com.pichicha.reto.app.api.utils.enums.EnumAppError;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
@@ -57,12 +57,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             errorMessage = exception.getMessage();
         }
         ErrorDetailsDTO errorDetails = ErrorUtil.getErrorDetailsVO(exchange, errorMessage,
-                ValidationErrorEnum.FIELD_VALIDATION_ERROR.getCode(), this.zoneId);
+                EnumAppError.BEAN_FIELD_VALIDATION.getCode(), this.zoneId);
         super.logger.error("handleWebExchangeBindException(): " + errorDetails);
         return Mono.just(new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST));
     }
 
-    private ErrorDetailsDTO constructErrorDetailsDTO(ServerWebExchange exchange, RetoAppException exception) {
+    private ErrorDetailsDTO constructErrorDetailsDTO(ServerWebExchange exchange, ApplicationException exception) {
         String errorMessage = this.getMessageFromProperties(exception.getErrorMessageKey(),
                 ErrorUtil.getLocale(exchange), exception.getArgs());
         return ErrorUtil.getErrorDetailsVO(exchange, errorMessage, exception.getErrorCode(), this.zoneId);

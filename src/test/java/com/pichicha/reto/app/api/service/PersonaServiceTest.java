@@ -3,7 +3,7 @@ package com.pichicha.reto.app.api.service;
 import com.pichicha.reto.app.api.common.AbstractContainerBase;
 import com.pichicha.reto.app.api.model.Persona;
 import com.pichicha.reto.app.api.services.PersonaService;
-import com.pichicha.reto.app.api.utils.enums.GeneroEnum;
+import com.pichicha.reto.app.api.utils.enums.EnumGenre;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,14 +27,14 @@ class PersonaServiceTest extends AbstractContainerBase {
 
     @Test
     @Order(1)
-    @DisplayName("Busca persona por ID")
-    void givenPersonData_whenFindById_thenReturnPersonObject() {
-        Mono<Persona> persona = this.personaService.buscarPorIdentificacion(PERSONA_ID);
+    @DisplayName("Find persona by ID")
+    void givenPersonaData_whenFindById_thenReturnPersonaObject() {
+        Mono<Persona> persona = this.personaService.findById(PERSONA_ID);
         StepVerifier.create(persona)
                 .assertNext(personaResult -> {
                     assertThat(personaResult.getId()).isEqualTo(PERSONA_ID);
                     assertThat(personaResult.getNombre()).isEqualTo("Jose Lema");
-                    assertThat(personaResult.getGenero()).isEqualTo(GeneroEnum.M);
+                    assertThat(personaResult.getGenero()).isEqualTo(EnumGenre.M);
                     assertThat(personaResult.getEdad()).isEqualTo(32);
                     assertThat(personaResult.getDireccion()).isEqualTo("Otavalo sn y principal");
                     assertThat(personaResult.getTelefono()).isEqualTo("098254785");
