@@ -1,8 +1,6 @@
-package com.pichicha.reto.app.api.dto;
+package com.pichicha.reto.app.api.dto.customer;
 
 import com.pichicha.reto.app.api.utils.enums.EnumGenre;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,8 +8,6 @@ import lombok.Data;
 @Builder
 public class CustomerCriteriaDTO {
 
-    @NotEmpty(message = "validacion.personas.identificacion.NotEmpty.mensaje")
-    @Size(min = 10, max = 10, message = "validacion.personas.identificacion.Size.mensaje")
     private String id;
 
     private String nombre;

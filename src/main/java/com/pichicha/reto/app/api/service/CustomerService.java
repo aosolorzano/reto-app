@@ -1,8 +1,9 @@
-package com.pichicha.reto.app.api.services;
+package com.pichicha.reto.app.api.service;
 
-import com.pichicha.reto.app.api.dto.CustomerDTO;
-import com.pichicha.reto.app.api.dto.CustomerPasswordDTO;
-import com.pichicha.reto.app.api.dto.CustomerStatusDTO;
+import com.pichicha.reto.app.api.dto.customer.CustomerCriteriaDTO;
+import com.pichicha.reto.app.api.dto.customer.CustomerDTO;
+import com.pichicha.reto.app.api.dto.customer.CustomerPasswordDTO;
+import com.pichicha.reto.app.api.dto.customer.CustomerStatusDTO;
 import com.pichicha.reto.app.api.exception.ResourceNotFoundException;
 import com.pichicha.reto.app.api.model.Customer;
 import com.pichicha.reto.app.api.repository.CustomerRepository;
@@ -12,6 +13,7 @@ import com.pichicha.reto.app.api.utils.enums.EnumAppError;
 import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
@@ -79,5 +81,9 @@ public class CustomerService {
                 this.customerRepository.findById(customerId).orElseThrow(() ->
                         new ResourceNotFoundException(EnumAppError.CUSTOMER_NOT_FOUND, customerId)))
                 .subscribeOn(Schedulers.boundedElastic());
+    }
+
+    public Flux<CustomerDTO> find(CustomerCriteriaDTO customerDTO) {
+        return Flux.empty();
     }
 }

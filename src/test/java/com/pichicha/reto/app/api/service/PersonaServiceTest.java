@@ -2,7 +2,6 @@ package com.pichicha.reto.app.api.service;
 
 import com.pichicha.reto.app.api.common.AbstractContainerBase;
 import com.pichicha.reto.app.api.model.Persona;
-import com.pichicha.reto.app.api.services.PersonaService;
 import com.pichicha.reto.app.api.utils.enums.EnumGenre;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.pichicha.reto.app.api.services;
+package com.pichicha.reto.app.api.service;
 
 import com.pichicha.reto.app.api.exception.ResourceNotFoundException;
 import com.pichicha.reto.app.api.model.Persona;

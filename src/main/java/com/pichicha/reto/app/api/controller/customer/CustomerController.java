@@ -1,18 +1,16 @@
-package com.pichicha.reto.app.api.controller;
+package com.pichicha.reto.app.api.controller.customer;
 
-import com.pichicha.reto.app.api.dto.CustomerCriteriaDTO;
-import com.pichicha.reto.app.api.dto.CustomerDTO;
-import com.pichicha.reto.app.api.dto.CustomerPasswordDTO;
-import com.pichicha.reto.app.api.dto.CustomerStatusDTO;
-import com.pichicha.reto.app.api.services.CustomerService;
+import com.pichicha.reto.app.api.dto.customer.CustomerDTO;
+import com.pichicha.reto.app.api.dto.customer.CustomerIdDTO;
+import com.pichicha.reto.app.api.dto.customer.CustomerPasswordDTO;
+import com.pichicha.reto.app.api.dto.customer.CustomerStatusDTO;
+import com.pichicha.reto.app.api.service.CustomerService;
 import com.pichicha.reto.app.api.utils.ControllerUtil;
 import com.pichicha.reto.app.api.utils.DataUtil;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -36,10 +34,10 @@ public class CustomerController {
     }
 
     @PostMapping(ControllerUtil.FIND_PATH)
-    public Mono<ResponseEntity<CustomerDTO>> find(@RequestBody @Valid CustomerCriteriaDTO customerDTO) {
-        LOGGER.debug("find() - START: {}", customerDTO);
-        return this.customerService.findById(customerDTO.getId())
-                .map(ResponseEntity::ok);
+    @ResponseStatus(HttpStatus.OK)
+    public Mono<CustomerDTO> findById(@RequestBody @Valid CustomerIdDTO customerIdDTO) {
+        LOGGER.debug("findById() - START: {}", customerIdDTO);
+        return this.customerService.findById(customerIdDTO.id());
     }
 
     @PutMapping
@@ -63,11 +61,11 @@ public class CustomerController {
         return this.customerService.updatePassword(customerPasswordDTO);
     }
 
-    @PostMapping(path = ControllerUtil.DELETE_PATH, consumes = MediaType.TEXT_PLAIN_VALUE)
+    @PostMapping(ControllerUtil.DELETE_PATH)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> delete(@RequestBody String customerId) {
-        LOGGER.debug("delete(): {}", customerId);
-        return this.customerService.delete(customerId);
+    public Mono<Void> delete(@RequestBody @Valid CustomerIdDTO customerIdDTO) {
+        LOGGER.debug("delete(): {}", customerIdDTO);
+        return this.customerService.delete(customerIdDTO.id());
     }
 
     @GetMapping("/templateBody")

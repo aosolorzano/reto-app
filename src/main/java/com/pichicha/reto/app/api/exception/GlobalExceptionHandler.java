@@ -1,6 +1,6 @@
 package com.pichicha.reto.app.api.exception;
 
-import com.pichicha.reto.app.api.dto.ErrorDetailsDTO;
+import com.pichicha.reto.app.api.dto.common.ErrorDetailsDTO;
 import com.pichicha.reto.app.api.utils.ErrorUtil;
 import com.pichicha.reto.app.api.utils.enums.EnumAppError;
 import org.springframework.beans.factory.annotation.Value;

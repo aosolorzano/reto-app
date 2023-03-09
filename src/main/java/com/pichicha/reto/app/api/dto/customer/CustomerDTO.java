@@ -1,4 +1,4 @@
-package com.pichicha.reto.app.api.dto;
+package com.pichicha.reto.app.api.dto.customer;
 
 import com.pichicha.reto.app.api.utils.enums.EnumGenre;
 import jakarta.validation.constraints.Min;

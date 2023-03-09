@@ -1,6 +1,6 @@
 package com.pichicha.reto.app.api.utils;
 
-import com.pichicha.reto.app.api.dto.CustomerDTO;
+import com.pichicha.reto.app.api.dto.customer.CustomerDTO;
 import com.pichicha.reto.app.api.model.Account;
 import com.pichicha.reto.app.api.model.Transaction;
 import com.pichicha.reto.app.api.utils.enums.EnumStatus;

@@ -2,7 +2,6 @@ package com.pichicha.reto.app.api.service;
 
 import com.pichicha.reto.app.api.common.AbstractContainerBase;
 import com.pichicha.reto.app.api.model.Transaction;
-import com.pichicha.reto.app.api.services.TransactionService;
 import com.pichicha.reto.app.api.utils.DataUtil;
 import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import org.junit.jupiter.api.*;

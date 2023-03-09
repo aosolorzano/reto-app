@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pichicha.reto.app.api.config.EnvironmentLoader;
 import com.pichicha.reto.app.api.config.hints.MessagesRuntimeHints;
 import com.pichicha.reto.app.api.config.hints.PostgresRuntimeHints;
-import com.pichicha.reto.app.api.dto.ErrorDetailsDTO;
+import com.pichicha.reto.app.api.dto.common.ErrorDetailsDTO;
 import com.pichicha.reto.app.api.vo.AuroraPostgresSecretVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

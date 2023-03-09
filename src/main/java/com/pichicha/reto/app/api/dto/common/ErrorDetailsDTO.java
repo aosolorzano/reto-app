@@ -1,4 +1,4 @@
-package com.pichicha.reto.app.api.dto;
+package com.pichicha.reto.app.api.dto.common;
 
 import lombok.Builder;
 import lombok.Data;

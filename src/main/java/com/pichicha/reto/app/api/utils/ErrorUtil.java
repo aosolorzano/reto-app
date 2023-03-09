@@ -1,6 +1,6 @@
 package com.pichicha.reto.app.api.utils;
 
-import com.pichicha.reto.app.api.dto.ErrorDetailsDTO;
+import com.pichicha.reto.app.api.dto.common.ErrorDetailsDTO;
 import org.springframework.web.server.ServerWebExchange;
 
 import java.time.ZoneId;

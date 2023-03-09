@@ -1,11 +1,10 @@
 package com.pichicha.reto.app.api.service;
 
 import com.pichicha.reto.app.api.common.AbstractContainerBase;
-import com.pichicha.reto.app.api.dto.CustomerDTO;
-import com.pichicha.reto.app.api.dto.CustomerPasswordDTO;
-import com.pichicha.reto.app.api.dto.CustomerStatusDTO;
+import com.pichicha.reto.app.api.dto.customer.CustomerDTO;
+import com.pichicha.reto.app.api.dto.customer.CustomerPasswordDTO;
+import com.pichicha.reto.app.api.dto.customer.CustomerStatusDTO;
 import com.pichicha.reto.app.api.exception.ResourceNotFoundException;
-import com.pichicha.reto.app.api.services.CustomerService;
 import com.pichicha.reto.app.api.utils.DataUtil;
 import com.pichicha.reto.app.api.utils.enums.EnumGenre;
 import com.pichicha.reto.app.api.utils.enums.EnumStatus;

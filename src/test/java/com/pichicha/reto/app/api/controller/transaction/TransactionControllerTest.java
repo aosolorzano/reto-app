@@ -1,4 +1,4 @@
-package com.pichicha.reto.app.api.controller;
+package com.pichicha.reto.app.api.controller.transaction;
 
 import com.pichicha.reto.app.api.common.AbstractContainerBase;
 import com.pichicha.reto.app.api.model.Transaction;

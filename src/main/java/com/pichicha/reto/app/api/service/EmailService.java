@@ -1,4 +1,4 @@
-package com.pichicha.reto.app.api.services;
+package com.pichicha.reto.app.api.service;
 
 import com.pichicha.reto.app.api.model.Customer;
 import org.slf4j.Logger;

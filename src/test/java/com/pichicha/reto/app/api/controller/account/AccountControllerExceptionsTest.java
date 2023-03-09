@@ -1,12 +1,14 @@
-package com.pichicha.reto.app.api.controller;
+package com.pichicha.reto.app.api.controller.account;
 
 import com.pichicha.reto.app.api.common.AbstractContainerBase;
-import com.pichicha.reto.app.api.dto.ErrorDetailsDTO;
+import com.pichicha.reto.app.api.dto.common.EntityIdDTO;
+import com.pichicha.reto.app.api.dto.common.EntityStatusDTO;
+import com.pichicha.reto.app.api.dto.common.ErrorDetailsDTO;
 import com.pichicha.reto.app.api.model.Account;
 import com.pichicha.reto.app.api.utils.ControllerUtil;
 import com.pichicha.reto.app.api.utils.DataUtil;
-import com.pichicha.reto.app.api.utils.enums.EnumLanguageCode;
 import com.pichicha.reto.app.api.utils.enums.EnumAppError;
+import com.pichicha.reto.app.api.utils.enums.EnumLanguageCode;
 import org.assertj.core.api.Assertions;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,7 +20,6 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
@@ -51,12 +52,12 @@ class AccountControllerExceptionsTest extends AbstractContainerBase {
     }
 
     @Test
-    @DisplayName("Buscar account que no existe")
-    void givenNotExistingAccount_whenFindById_thenReturnError404() {
+    @DisplayName("Find non existing account - Spanish")
+    void givenNonExistingAccount_whenFindById_thenReturnError404() {
         this.webTestClient
-                .get()
-                .uri(ControllerUtil.ACCOUNT_PATH.concat("/{id}"), account.getNumeroCuenta())
-                .accept(MediaType.APPLICATION_JSON)
+                .post()
+                .uri(ControllerUtil.ACCOUNT_PATH.concat(ControllerUtil.FIND_PATH))
+                .bodyValue(new EntityIdDTO(account.getNumeroCuenta()))
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.ES.getCode())
                 .exchange()
                 .expectStatus().isNotFound()
@@ -70,12 +71,12 @@ class AccountControllerExceptionsTest extends AbstractContainerBase {
     }
 
     @Test
-    @DisplayName("Buscar account que no existe - English")
-    void givenNotExistingAccount_whenFindById_thenReturnError404InEnglish() {
+    @DisplayName("Find non existing account - English")
+    void givenNonExistingAccount_whenFindById_thenReturnError404InEnglish() {
         this.webTestClient
-                .get()
-                .uri(ControllerUtil.ACCOUNT_PATH.concat("/{id}"), account.getNumeroCuenta())
-                .accept(MediaType.APPLICATION_JSON)
+                .post()
+                .uri(ControllerUtil.ACCOUNT_PATH.concat(ControllerUtil.FIND_PATH))
+                .bodyValue(new EntityIdDTO(account.getNumeroCuenta()))
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.EN.getCode())
                 .exchange()
                 .expectStatus().isNotFound()
@@ -90,14 +91,17 @@ class AccountControllerExceptionsTest extends AbstractContainerBase {
     }
 
     @Test
-    @DisplayName("Actualizar account que no existe")
-    void givenNotExistingAccount_whenUpdate_thenReturnError404() {
+    @DisplayName("Update status for non existing account - Spanish")
+    void givenNonExistingAccount_whenUpdateStatus_thenReturnError404() {
+        EntityStatusDTO entityStatusDTO = EntityStatusDTO.builder()
+                .id(account.getNumeroCuenta())
+                .status(account.getEstado())
+                .build();
         this.webTestClient
                 .put()
-                .uri(ControllerUtil.ACCOUNT_PATH.concat("/{id}"), account.getNumeroCuenta())
-                .accept(MediaType.APPLICATION_JSON)
+                .uri(ControllerUtil.ACCOUNT_PATH.concat(ControllerUtil.STATUS_PATH))
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.ES.getCode())
-                .bodyValue(account)
+                .bodyValue(entityStatusDTO)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(ErrorDetailsDTO.class)
@@ -110,14 +114,17 @@ class AccountControllerExceptionsTest extends AbstractContainerBase {
     }
 
     @Test
-    @DisplayName("Actualizar account que no existe - English")
-    void givenNotExistingAccount_whenUpdate_thenReturnError404InEnglish() {
+    @DisplayName("Update status for non existing account - English")
+    void givenNonExistingAccount_whenUpdateStatus_thenReturnError404InEnglish() {
+        EntityStatusDTO entityStatusDTO = EntityStatusDTO.builder()
+                .id(account.getNumeroCuenta())
+                .status(account.getEstado())
+                .build();
         this.webTestClient
                 .put()
-                .uri(ControllerUtil.ACCOUNT_PATH.concat("/{id}"), account.getNumeroCuenta())
-                .accept(MediaType.APPLICATION_JSON)
+                .uri(ControllerUtil.ACCOUNT_PATH.concat(ControllerUtil.STATUS_PATH))
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.EN.getCode())
-                .bodyValue(account)
+                .bodyValue(entityStatusDTO)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(ErrorDetailsDTO.class)
@@ -131,11 +138,12 @@ class AccountControllerExceptionsTest extends AbstractContainerBase {
     }
 
     @Test
-    @DisplayName("Eliminar account que no existe")
-    void givenNotExistingAccount_whenDelete_thenReturnError404() {
+    @DisplayName("Delete non existing account - Spanish")
+    void givenNonExistingAccount_whenDelete_thenReturnError404() {
         this.webTestClient
-                .delete()
-                .uri(ControllerUtil.ACCOUNT_PATH.concat("/{id}"), account.getNumeroCuenta())
+                .post()
+                .uri(ControllerUtil.ACCOUNT_PATH.concat(ControllerUtil.DELETE_PATH))
+                .bodyValue(new EntityIdDTO(account.getNumeroCuenta()))
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.ES.getCode())
                 .exchange()
                 .expectStatus().isNotFound()
@@ -150,11 +158,12 @@ class AccountControllerExceptionsTest extends AbstractContainerBase {
     }
 
     @Test
-    @DisplayName("Eliminar account que no existe - English")
-    void givenNotExistingAccount_whenDelete_thenReturnError404InEnglish() {
+    @DisplayName("Delete non existing account - English")
+    void givenNonExistingAccount_whenDelete_thenReturnError404InEnglish() {
         this.webTestClient
-                .delete()
-                .uri(ControllerUtil.ACCOUNT_PATH.concat("/{id}"), account.getNumeroCuenta())
+                .post()
+                .uri(ControllerUtil.ACCOUNT_PATH.concat(ControllerUtil.DELETE_PATH))
+                .bodyValue(new EntityIdDTO(account.getNumeroCuenta()))
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.EN.getCode())
                 .exchange()
                 .expectStatus().isNotFound()

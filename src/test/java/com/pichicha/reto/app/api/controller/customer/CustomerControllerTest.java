@@ -1,10 +1,7 @@
-package com.pichicha.reto.app.api.controller;
+package com.pichicha.reto.app.api.controller.customer;
 
 import com.pichicha.reto.app.api.common.AbstractContainerBase;
-import com.pichicha.reto.app.api.dto.CustomerCriteriaDTO;
-import com.pichicha.reto.app.api.dto.CustomerDTO;
-import com.pichicha.reto.app.api.dto.CustomerPasswordDTO;
-import com.pichicha.reto.app.api.dto.CustomerStatusDTO;
+import com.pichicha.reto.app.api.dto.customer.*;
 import com.pichicha.reto.app.api.utils.ControllerUtil;
 import com.pichicha.reto.app.api.utils.DataUtil;
 import com.pichicha.reto.app.api.utils.enums.EnumGenre;
@@ -56,13 +53,10 @@ class CustomerControllerTest extends AbstractContainerBase {
     @Order(2)
     @DisplayName("Find created customer")
     void givenCustomerData_whenFind_thenReturnCustomerObject() {
-        var customerCriteriaDTO = CustomerCriteriaDTO.builder()
-                .id(customerDTO.getId())
-                .build();
         this.webTestClient
                 .post()
                 .uri(ControllerUtil.CUSTOMER_PATH.concat(ControllerUtil.FIND_PATH))
-                .bodyValue(customerCriteriaDTO)
+                .bodyValue(new CustomerIdDTO(customerDTO.getId()))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().is2xxSuccessful()
@@ -96,13 +90,10 @@ class CustomerControllerTest extends AbstractContainerBase {
     @Order(4)
     @DisplayName("Find updated customer")
     void givenUpdatedCustomerData_whenFindById_thenReturnCustomerObject() {
-        var customerCriteriaDTO = CustomerCriteriaDTO.builder()
-                .id(customerDTO.getId())
-                .build();
         this.webTestClient
                 .post()
                 .uri(ControllerUtil.CUSTOMER_PATH.concat(ControllerUtil.FIND_PATH))
-                .bodyValue(customerCriteriaDTO)
+                .bodyValue(new CustomerIdDTO(customerDTO.getId()))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().is2xxSuccessful()
@@ -154,7 +145,7 @@ class CustomerControllerTest extends AbstractContainerBase {
         this.webTestClient
                 .post()
                 .uri(ControllerUtil.CUSTOMER_PATH.concat(ControllerUtil.DELETE_PATH))
-                .bodyValue(customerDTO.getId())
+                .bodyValue(new CustomerIdDTO(customerDTO.getId()))
                 .exchange()
                 .expectStatus().is2xxSuccessful();
     }

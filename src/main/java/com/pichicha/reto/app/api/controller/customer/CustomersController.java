@@ -1,11 +1,14 @@
-package com.pichicha.reto.app.api.controller;
+package com.pichicha.reto.app.api.controller.customer;
 
-import com.pichicha.reto.app.api.dto.CustomerDTO;
-import com.pichicha.reto.app.api.services.CustomerService;
+import com.pichicha.reto.app.api.dto.customer.CustomerCriteriaDTO;
+import com.pichicha.reto.app.api.dto.customer.CustomerDTO;
+import com.pichicha.reto.app.api.service.CustomerService;
 import com.pichicha.reto.app.api.utils.ControllerUtil;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
@@ -22,9 +25,9 @@ public class CustomersController {
         this.customerService = customerService;
     }
 
-    @GetMapping
-    public Flux<CustomerDTO> findAll() {
-        LOGGER.debug("findAll() - START");
-        return Flux.empty();
+    @PostMapping
+    public Flux<CustomerDTO> find(@RequestBody @Valid CustomerCriteriaDTO customerDTO) {
+        LOGGER.debug("find() - START: {}", customerDTO);
+        return this.customerService.find(customerDTO);
     }
 }

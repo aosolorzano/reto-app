@@ -1,7 +1,7 @@
-package com.pichicha.reto.app.api.controller;
+package com.pichicha.reto.app.api.controller.transaction;
 
 import com.pichicha.reto.app.api.model.Transaction;
-import com.pichicha.reto.app.api.services.TransactionService;
+import com.pichicha.reto.app.api.service.TransactionService;
 import com.pichicha.reto.app.api.utils.ControllerUtil;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;

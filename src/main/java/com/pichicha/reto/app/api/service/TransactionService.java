@@ -1,4 +1,4 @@
-package com.pichicha.reto.app.api.services;
+package com.pichicha.reto.app.api.service;
 
 import com.pichicha.reto.app.api.exception.TransactionException;
 import com.pichicha.reto.app.api.exception.ResourceNotFoundException;
@@ -38,7 +38,7 @@ public class TransactionService {
     }
 
     public Mono<Transaction> crear(Transaction nuevoTransaction) {
-        return this.accountService.buscarPorId(nuevoTransaction.getNumeroCuenta())
+        return this.accountService.findById(nuevoTransaction.getNumeroCuenta())
                 .publishOn(Schedulers.boundedElastic())
                 .map(cuenta -> {
                     double saldoCuenta = cuenta.getSaldo();
@@ -49,7 +49,7 @@ public class TransactionService {
                         saldoCuenta += nuevoTransaction.getValor();
                     }
                     this.validarSaldoFinal(nuevoTransaction, saldoCuenta);
-                    return this.accountService.actualizarSaldo(cuenta.getNumeroCuenta(), saldoCuenta);
+                    return this.accountService.updateBalance(cuenta.getNumeroCuenta(), saldoCuenta);
                 })
                 .publishOn(Schedulers.boundedElastic())
                 .map(cuenta -> {
@@ -75,7 +75,7 @@ public class TransactionService {
                         saldoCuenta -= movimientoExistente.getValor();
                     }
                     this.validarSaldoFinal(movimientoExistente, saldoCuenta);
-                    this.accountService.actualizarSaldo(movimientoExistente.getNumeroCuenta(),
+                    this.accountService.updateBalance(movimientoExistente.getNumeroCuenta(),
                             saldoCuenta);
                 })
                 .then();
