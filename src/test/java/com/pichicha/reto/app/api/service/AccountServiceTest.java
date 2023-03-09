@@ -5,7 +5,7 @@ import com.pichicha.reto.app.api.exception.ResourceNotFoundException;
 import com.pichicha.reto.app.api.model.Account;
 import com.pichicha.reto.app.api.services.AccountService;
 import com.pichicha.reto.app.api.utils.DataUtil;
-import com.pichicha.reto.app.api.utils.enums.EnumState;
+import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import com.pichicha.reto.app.api.utils.enums.EnumAccountType;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ class AccountServiceTest extends AbstractContainerBase {
                     assertThat(cuentaResult.getClienteId()).isEqualTo(CLIENTE_ID);
                     assertThat(cuentaResult.getTipo()).isEqualTo(EnumAccountType.CTE);
                     assertThat(cuentaResult.getSaldo()).isEqualTo(1000.00);
-                    assertThat(cuentaResult.getEstado()).isEqualTo(EnumState.ACT);
+                    assertThat(cuentaResult.getEstado()).isEqualTo(EnumStatus.ACT);
                     account.setNumeroCuenta(cuentaResult.getNumeroCuenta());
                 })
                 .verifyComplete();
@@ -65,7 +65,7 @@ class AccountServiceTest extends AbstractContainerBase {
                     assertThat(cuentaResult.getClienteId()).isEqualTo(CLIENTE_ID);
                     assertThat(cuentaResult.getTipo()).isEqualTo(EnumAccountType.CTE);
                     assertThat(cuentaResult.getSaldo()).isEqualTo(1000.00);
-                    assertThat(cuentaResult.getEstado()).isEqualTo(EnumState.ACT);
+                    assertThat(cuentaResult.getEstado()).isEqualTo(EnumStatus.ACT);
                 })
                 .verifyComplete();
     }
@@ -84,7 +84,7 @@ class AccountServiceTest extends AbstractContainerBase {
     @Order(4)
     @DisplayName("Actualiza estado")
     void givenAccountData_whenUpdateState_thenReturnSavedAccountObject() {
-        account.setEstado(EnumState.INA);
+        account.setEstado(EnumStatus.INA);
         Mono<Account> cuentaActualizada = this.accountService.actualizar(account.getNumeroCuenta(), account);
         StepVerifier.create(cuentaActualizada)
                 .assertNext(cuentaResult -> {
@@ -92,7 +92,7 @@ class AccountServiceTest extends AbstractContainerBase {
                     assertThat(cuentaResult.getClienteId()).isEqualTo(CLIENTE_ID);
                     assertThat(cuentaResult.getTipo()).isEqualTo(EnumAccountType.CTE);
                     assertThat(cuentaResult.getSaldo()).isEqualTo(1000.00);
-                    assertThat(cuentaResult.getEstado()).isEqualTo(EnumState.INA);
+                    assertThat(cuentaResult.getEstado()).isEqualTo(EnumStatus.INA);
                 })
                 .verifyComplete();
     }

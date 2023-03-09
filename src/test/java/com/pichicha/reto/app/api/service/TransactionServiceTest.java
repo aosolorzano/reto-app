@@ -4,7 +4,7 @@ import com.pichicha.reto.app.api.common.AbstractContainerBase;
 import com.pichicha.reto.app.api.model.Transaction;
 import com.pichicha.reto.app.api.services.TransactionService;
 import com.pichicha.reto.app.api.utils.DataUtil;
-import com.pichicha.reto.app.api.utils.enums.EnumState;
+import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,7 +39,7 @@ class TransactionServiceTest extends AbstractContainerBase {
         StepVerifier.create(nuevoMovimiento)
                 .assertNext(cuentaResult -> {
                     assertThat(cuentaResult.getId()).isPositive();
-                    assertThat(cuentaResult.getEstado()).isEqualTo(EnumState.ACT);
+                    assertThat(cuentaResult.getEstado()).isEqualTo(EnumStatus.ACT);
                 })
                 .verifyComplete();
     }

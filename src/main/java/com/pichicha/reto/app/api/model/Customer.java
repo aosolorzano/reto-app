@@ -1,6 +1,6 @@
 package com.pichicha.reto.app.api.model;
 
-import com.pichicha.reto.app.api.utils.enums.EnumState;
+import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +22,7 @@ public class Customer extends Persona {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ESTADO", nullable = false)
-    private EnumState estado;
+    private EnumStatus estado;
 }
 
 

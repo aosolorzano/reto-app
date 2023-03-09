@@ -7,7 +7,7 @@ import com.pichicha.reto.app.api.model.Transaction;
 import com.pichicha.reto.app.api.repository.AccountRepository;
 import com.pichicha.reto.app.api.repository.TransactionRepository;
 import com.pichicha.reto.app.api.utils.enums.EnumAppError;
-import com.pichicha.reto.app.api.utils.enums.EnumState;
+import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import com.pichicha.reto.app.api.utils.enums.EnumTransactionType;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -54,7 +54,7 @@ public class TransactionService {
                 .publishOn(Schedulers.boundedElastic())
                 .map(cuenta -> {
                     nuevoTransaction.setFecha(ZonedDateTime.now());
-                    nuevoTransaction.setEstado(EnumState.ACT);
+                    nuevoTransaction.setEstado(EnumStatus.ACT);
                     return this.transactionRepository.save(nuevoTransaction);
                 });
     }
@@ -84,7 +84,7 @@ public class TransactionService {
     private void validarSaldoFinal(Transaction transactionExistente, double saldoCuenta) {
         if (saldoCuenta < 0) {
             transactionExistente.setFecha(ZonedDateTime.now());
-            transactionExistente.setEstado(EnumState.INA);
+            transactionExistente.setEstado(EnumStatus.INA);
             this.transactionRepository.save(transactionExistente);
             throw new TransactionException(EnumAppError.INSUFFICIENT_BALANCE,
                     transactionExistente.getNumeroCuenta());

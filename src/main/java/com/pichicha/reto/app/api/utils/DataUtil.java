@@ -3,7 +3,7 @@ package com.pichicha.reto.app.api.utils;
 import com.pichicha.reto.app.api.dto.CustomerDTO;
 import com.pichicha.reto.app.api.model.Account;
 import com.pichicha.reto.app.api.model.Transaction;
-import com.pichicha.reto.app.api.utils.enums.EnumState;
+import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import com.pichicha.reto.app.api.utils.enums.EnumGenre;
 import com.pichicha.reto.app.api.utils.enums.EnumAccountType;
 import com.pichicha.reto.app.api.utils.enums.EnumTransactionType;
@@ -28,7 +28,7 @@ public final class DataUtil {
         return Account.builder()
                 .tipo(EnumAccountType.CTE)
                 .saldo(1000.00)
-                .estado(EnumState.ACT)
+                .estado(EnumStatus.ACT)
                 .build();
     }
 

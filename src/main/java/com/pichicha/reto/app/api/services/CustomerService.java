@@ -1,13 +1,15 @@
 package com.pichicha.reto.app.api.services;
 
 import com.pichicha.reto.app.api.dto.CustomerDTO;
+import com.pichicha.reto.app.api.dto.CustomerPasswordDTO;
+import com.pichicha.reto.app.api.dto.CustomerStatusDTO;
 import com.pichicha.reto.app.api.exception.ResourceNotFoundException;
 import com.pichicha.reto.app.api.model.Customer;
 import com.pichicha.reto.app.api.repository.CustomerRepository;
 import com.pichicha.reto.app.api.utils.EntityUtil;
 import com.pichicha.reto.app.api.utils.PasswdUtil;
 import com.pichicha.reto.app.api.utils.enums.EnumAppError;
-import com.pichicha.reto.app.api.utils.enums.EnumState;
+import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -38,7 +40,7 @@ public class CustomerService {
         return customer
                 .map(EntityUtil::toEntity)
                 .doOnNext(customerEntity -> customerEntity.setClave(PasswdUtil.generatePassword()))
-                .doOnNext(customerEntity -> customerEntity.setEstado(EnumState.SUS))
+                .doOnNext(customerEntity -> customerEntity.setEstado(EnumStatus.SUS))
                 .map(this.customerRepository::save)
                 .doOnNext(this.emailService::sendCreationEmail)
                 .then();
@@ -49,6 +51,20 @@ public class CustomerService {
                 .doOnNext(actualCustomer -> BeanUtils.copyProperties(updatedCustomer, actualCustomer))
                 .map(this.customerRepository::save)
                 .doOnNext(this.emailService::sendModificationEmail)
+                .then();
+    }
+
+    public Mono<Void> updateStatus(CustomerStatusDTO customerStatusDTO) {
+        return this.findEntityById(customerStatusDTO.getId())
+                .doOnNext(customer -> customer.setEstado(customerStatusDTO.getStatus()))
+                .map(this.customerRepository::save)
+                .then();
+    }
+
+    public Mono<Void> updatePassword(CustomerPasswordDTO customerPasswordDTO) {
+        return this.findEntityById(customerPasswordDTO.getId())
+                .doOnNext(customer -> customer.setClave(customerPasswordDTO.getPassword()))
+                .map(this.customerRepository::save)
                 .then();
     }
 

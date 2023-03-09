@@ -1,6 +1,6 @@
 package com.pichicha.reto.app.api.model;
 
-import com.pichicha.reto.app.api.utils.enums.EnumState;
+import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import com.pichicha.reto.app.api.utils.enums.EnumAccountType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -41,5 +41,5 @@ public class Account {
     @Enumerated(EnumType.STRING)
     @Column(name = "ESTADO", length = 3, nullable = false)
     @NotNull(message = "validacion.cuentas.estado.NotNull.mensaje")
-    private EnumState estado;
+    private EnumStatus estado;
 }

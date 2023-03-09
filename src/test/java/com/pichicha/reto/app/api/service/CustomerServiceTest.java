@@ -2,10 +2,13 @@ package com.pichicha.reto.app.api.service;
 
 import com.pichicha.reto.app.api.common.AbstractContainerBase;
 import com.pichicha.reto.app.api.dto.CustomerDTO;
+import com.pichicha.reto.app.api.dto.CustomerPasswordDTO;
+import com.pichicha.reto.app.api.dto.CustomerStatusDTO;
 import com.pichicha.reto.app.api.exception.ResourceNotFoundException;
 import com.pichicha.reto.app.api.services.CustomerService;
 import com.pichicha.reto.app.api.utils.DataUtil;
 import com.pichicha.reto.app.api.utils.enums.EnumGenre;
+import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -75,7 +78,7 @@ class CustomerServiceTest extends AbstractContainerBase {
 
     @Test
     @Order(4)
-    @DisplayName("Find created customer")
+    @DisplayName("Find updated customer")
     void givenUpdatedCustomerData_whenFindById_thenReturnCustomerObject() {
         Mono<CustomerDTO> customerDTOMono = this.customerService.findById(CUSTOMER_ID);
         StepVerifier.create(customerDTOMono)
@@ -89,7 +92,33 @@ class CustomerServiceTest extends AbstractContainerBase {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
+    @DisplayName("Update status")
+    void givenCustomerData_whenUpdateStatus_thenUpdateCustomerObject() {
+        var customerStatusDTO = CustomerStatusDTO.builder()
+                .id(CUSTOMER_ID)
+                .status(EnumStatus.ACT)
+                .build();
+        Mono<Void> voidMono = this.customerService.updateStatus(customerStatusDTO);
+        StepVerifier.create(voidMono)
+                .verifyComplete();
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Update password")
+    void givenCustomerData_whenUpdatePasswd_thenUpdateCustomerObject() {
+        var customerPasswordDTO = CustomerPasswordDTO.builder()
+                .id(CUSTOMER_ID)
+                .password("123456abc")
+                .build();
+        Mono<Void> voidMono = this.customerService.updatePassword(customerPasswordDTO);
+        StepVerifier.create(voidMono)
+                .verifyComplete();
+    }
+
+    @Test
+    @Order(7)
     @DisplayName("Delete customer")
     void givenCustomerData_whenDeleteById_thenDeleteCustomerObject() {
         Mono<Void> voidMono = this.customerService.delete(CUSTOMER_ID);
@@ -98,7 +127,7 @@ class CustomerServiceTest extends AbstractContainerBase {
     }
 
     @Test
-    @Order(5)
+    @Order(8)
     @DisplayName("Find deleted customer")
     void givenDeletedCustomerData_whenFindById_thenReturnException() {
         Mono<CustomerDTO> customerDTOMono = this.customerService.findById(CUSTOMER_ID);

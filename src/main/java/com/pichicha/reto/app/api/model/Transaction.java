@@ -1,6 +1,6 @@
 package com.pichicha.reto.app.api.model;
 
-import com.pichicha.reto.app.api.utils.enums.EnumState;
+import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import com.pichicha.reto.app.api.utils.enums.EnumTransactionType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -40,7 +40,7 @@ public class Transaction {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ESTADO", length = 3, nullable = false)
-    private EnumState estado;
+    private EnumStatus estado;
 
     @Column(name = "VALOR", nullable = false)
     @Min(value = 1, message = "validacion.movimientos.valor.Min.mensaje")

@@ -131,9 +131,9 @@ class CustomerControllerExceptionsTest extends AbstractContainerBase {
     @DisplayName("Delete non existing customer - Spanish")
     void givenNonExistingCustomer_whenDelete_thenReturnError404() {
         this.webTestClient
-                .patch()
+                .post()
                 .uri(ControllerUtil.CUSTOMER_PATH.concat(ControllerUtil.DELETE_PATH))
-                .bodyValue(customerDTO)
+                .bodyValue(customerDTO.getId())
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.ES.getCode())
                 .exchange()
                 .expectStatus().isNotFound()
@@ -150,9 +150,9 @@ class CustomerControllerExceptionsTest extends AbstractContainerBase {
     @DisplayName("Delete non existing customer - English")
     void givenNonExistingCustomer_whenDelete_thenReturnError404InEnglish() {
         this.webTestClient
-                .patch()
+                .post()
                 .uri(ControllerUtil.CUSTOMER_PATH.concat(ControllerUtil.DELETE_PATH))
-                .bodyValue(customerDTO)
+                .bodyValue(customerDTO.getId())
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.EN.getCode())
                 .exchange()
                 .expectStatus().isNotFound()

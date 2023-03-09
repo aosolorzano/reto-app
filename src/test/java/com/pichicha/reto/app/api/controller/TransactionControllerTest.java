@@ -4,7 +4,7 @@ import com.pichicha.reto.app.api.common.AbstractContainerBase;
 import com.pichicha.reto.app.api.model.Transaction;
 import com.pichicha.reto.app.api.utils.ControllerUtil;
 import com.pichicha.reto.app.api.utils.DataUtil;
-import com.pichicha.reto.app.api.utils.enums.EnumState;
+import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.BeanUtils;
@@ -48,7 +48,7 @@ class TransactionControllerTest extends AbstractContainerBase {
                 .expectBody(Transaction.class)
                 .value(movimientoResult -> {
                     Assertions.assertThat(movimientoResult.getId()).isNotNull().isPositive();
-                    Assertions.assertThat(movimientoResult.getEstado()).isEqualTo(EnumState.ACT);
+                    Assertions.assertThat(movimientoResult.getEstado()).isEqualTo(EnumStatus.ACT);
                     BeanUtils.copyProperties(movimientoResult, transaction);
                 });
     }

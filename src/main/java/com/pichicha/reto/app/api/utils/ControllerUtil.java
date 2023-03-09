@@ -12,6 +12,7 @@ public final class ControllerUtil {
     public static final String TRANSACTIONS_PATH = "/api/transactions";
 
     public static final String FIND_PATH = "/find";
+    public static final String STATUS_PATH = "/status";
     public static final String DELETE_PATH = "/delete";
 
     private ControllerUtil() {
