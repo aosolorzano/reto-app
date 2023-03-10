@@ -26,13 +26,13 @@ public class Account {
     private Long numeroCuenta;
 
     @Column(name = "CLIENTE_ID", length = 10, nullable = false)
-    @NotEmpty(message = "validacion.cuentas.clienteId.NotEmpty.mensaje")
-    @Size(min = 10, max = 10, message = "validacion.cuentas.clienteId.Size.mensaje")
+    @NotEmpty(message = "validation.personas.id.NotEmpty.message")
+    @Size(min = 10, max = 10, message = "validation.personas.id.Size.message")
     private String clienteId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "TIPO", length = 3, nullable = false)
-    @NotNull(message = "validacion.cuentas.tipo.NotNull.mensaje")
+    @NotNull(message = "validation.type.NotNull.message")
     private EnumAccountType tipo;
 
     @Column(name = "SALDO", nullable = false)
@@ -40,6 +40,6 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ESTADO", length = 3, nullable = false)
-    @NotNull(message = "validacion.cuentas.estado.NotNull.mensaje")
+    @NotNull(message = "validation.status.NotNull.message")
     private EnumStatus estado;
 }

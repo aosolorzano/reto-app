@@ -1,6 +1,5 @@
 package com.pichicha.reto.app.api.dto.customer;
 
-import com.pichicha.reto.app.api.utils.enums.EnumGenre;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,13 +9,7 @@ public class CustomerCriteriaDTO {
 
     private String id;
 
-    private String nombre;
+    private String name;
 
-    private EnumGenre genero;
-
-    private Integer edad;
-
-    private String direccion;
-
-    private String telefono;
+    private Integer age;
 }

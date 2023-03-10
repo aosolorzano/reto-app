@@ -1,5 +1,6 @@
 package com.pichicha.reto.app.api.service;
 
+import com.pichicha.reto.app.api.dao.CustomerDAO;
 import com.pichicha.reto.app.api.dto.customer.CustomerCriteriaDTO;
 import com.pichicha.reto.app.api.dto.customer.CustomerDTO;
 import com.pichicha.reto.app.api.dto.customer.CustomerPasswordDTO;
@@ -21,11 +22,13 @@ import reactor.core.scheduler.Schedulers;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final CustomerDAO customerDAO;
 
     private final EmailService emailService;
 
-    public CustomerService(CustomerRepository customerRepository, EmailService emailService) {
+    public CustomerService(CustomerRepository customerRepository, EmailService emailService, CustomerDAO customerDAO) {
         this.customerRepository = customerRepository;
+        this.customerDAO = customerDAO;
         this.emailService = emailService;
     }
 
@@ -83,7 +86,7 @@ public class CustomerService {
                 .subscribeOn(Schedulers.boundedElastic());
     }
 
-    public Flux<CustomerDTO> find(CustomerCriteriaDTO customerDTO) {
-        return Flux.empty();
+    public Flux<CustomerDTO> find(CustomerCriteriaDTO customerCriteriaDTO) {
+        return Flux.fromStream(() -> this.customerDAO.find(customerCriteriaDTO).stream());
     }
 }

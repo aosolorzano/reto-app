@@ -30,12 +30,12 @@ public class Transaction {
     private ZonedDateTime fecha;
 
     @Column(name = "NUMERO_CUENTA", nullable = false)
-    @NotNull(message = "validacion.movimientos.cuenta.NotNull.mensaje")
+    @NotNull(message = "validation.accounts.id.NotNull.message")
     private Long numeroCuenta;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "TIPO", length = 3, nullable = false)
-    @NotNull(message = "validacion.movimientos.tipo.NotNull.mensaje")
+    @NotNull(message = "validation.type.NotNull.message")
     private EnumTransactionType tipo;
 
     @Enumerated(EnumType.STRING)
@@ -43,7 +43,7 @@ public class Transaction {
     private EnumStatus estado;
 
     @Column(name = "VALOR", nullable = false)
-    @Min(value = 1, message = "validacion.movimientos.valor.Min.mensaje")
+    @Min(value = 1, message = "validation.transactions.value.Min.message")
     private double valor;
 
     @Column(name = "SALDO_INICIAL", nullable = false)

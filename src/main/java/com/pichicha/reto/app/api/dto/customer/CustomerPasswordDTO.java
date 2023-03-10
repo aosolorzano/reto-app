@@ -9,11 +9,11 @@ import lombok.Data;
 @Builder
 public class CustomerPasswordDTO {
 
-    @NotEmpty(message = "validacion.personas.identificacion.NotEmpty.mensaje")
-    @Size(min = 10, max = 10, message = "validacion.personas.identificacion.Size.mensaje")
+    @NotEmpty(message = "validation.personas.id.NotEmpty.message")
+    @Size(min = 10, max = 10, message = "validation.personas.id.Size.message")
     private String id;
 
-    @NotEmpty(message = "validacion.clientes.password.NotEmpty.mensaje")
-    @Size(min = 8, max = 12, message = "validacion.clientes.password.Size.mensaje")
+    @NotEmpty(message = "validation.customers.password.NotEmpty.message")
+    @Size(min = 8, max = 12, message = "validation.customers.password.Size.message")
     private String password;
 }

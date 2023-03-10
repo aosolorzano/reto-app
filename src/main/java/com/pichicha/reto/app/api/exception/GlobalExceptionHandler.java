@@ -2,7 +2,7 @@ package com.pichicha.reto.app.api.exception;
 
 import com.pichicha.reto.app.api.dto.common.ErrorDetailsDTO;
 import com.pichicha.reto.app.api.utils.ErrorUtil;
-import com.pichicha.reto.app.api.utils.enums.EnumAppError;
+import com.pichicha.reto.app.api.utils.enums.EnumValidationError;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
@@ -41,6 +41,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return Mono.just(new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND));
     }
 
+    @ExceptionHandler(ApplicationException.class)
+    public final Mono<ResponseEntity<ErrorDetailsDTO>> handleApplicationException(
+            ApplicationException exception,
+            ServerWebExchange exchange) {
+        ErrorDetailsDTO errorDetails = this.constructErrorDetailsDTO(exchange, exception);
+        super.logger.error("handleApplicationException(): " + errorDetails);
+        return Mono.just(new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST));
+    }
+
     @Override
     public Mono<ResponseEntity<Object>> handleWebExchangeBindException(
             WebExchangeBindException exception,
@@ -57,7 +66,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             errorMessage = exception.getMessage();
         }
         ErrorDetailsDTO errorDetails = ErrorUtil.getErrorDetailsVO(exchange, errorMessage,
-                EnumAppError.BEAN_FIELD_VALIDATION.getCode(), this.zoneId);
+                EnumValidationError.BEAN_FIELD_VALIDATION.getCode(), this.zoneId);
         super.logger.error("handleWebExchangeBindException(): " + errorDetails);
         return Mono.just(new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST));
     }

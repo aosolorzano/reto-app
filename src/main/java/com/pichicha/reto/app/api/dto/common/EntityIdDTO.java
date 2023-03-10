@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 public record EntityIdDTO(
-        @Min(value = 1, message = "validacion.entidades.id.Min.mensaje")
-        @NotNull(message = "validacion.entidades.id.NotNull.mensaje")
+        @Min(value = 1, message = "validation.id.Min.message")
+        @NotNull(message = "validation.id.NotNull.message")
         Long id) {
 }

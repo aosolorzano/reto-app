@@ -1,6 +1,7 @@
 package com.pichicha.reto.app.api.service;
 
 import com.pichicha.reto.app.api.common.AbstractContainerBase;
+import com.pichicha.reto.app.api.dto.customer.CustomerCriteriaDTO;
 import com.pichicha.reto.app.api.dto.customer.CustomerDTO;
 import com.pichicha.reto.app.api.dto.customer.CustomerPasswordDTO;
 import com.pichicha.reto.app.api.dto.customer.CustomerStatusDTO;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -133,5 +135,18 @@ class CustomerServiceTest extends AbstractContainerBase {
         StepVerifier.create(customerDTOMono)
                 .expectError(ResourceNotFoundException.class)
                 .verify();
+    }
+
+    @Test
+    @Order(9)
+    @DisplayName("Find customer by Name")
+    void givenCustomerData_whenFindByName_thenReturnCustomerObjects() {
+        CustomerCriteriaDTO customerCriteriaDTO = CustomerCriteriaDTO.builder()
+                .name("Jose")
+                .build();
+        Flux<CustomerDTO> taskFluxResult = this.customerService.find(customerCriteriaDTO);
+        StepVerifier.create(taskFluxResult)
+                .expectNextCount(1L)
+                .verifyComplete();
     }
 }

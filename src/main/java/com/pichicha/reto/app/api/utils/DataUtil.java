@@ -3,9 +3,9 @@ package com.pichicha.reto.app.api.utils;
 import com.pichicha.reto.app.api.dto.customer.CustomerDTO;
 import com.pichicha.reto.app.api.model.Account;
 import com.pichicha.reto.app.api.model.Transaction;
-import com.pichicha.reto.app.api.utils.enums.EnumStatus;
-import com.pichicha.reto.app.api.utils.enums.EnumGenre;
 import com.pichicha.reto.app.api.utils.enums.EnumAccountType;
+import com.pichicha.reto.app.api.utils.enums.EnumGenre;
+import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import com.pichicha.reto.app.api.utils.enums.EnumTransactionType;
 
 public final class DataUtil {

@@ -4,7 +4,6 @@ import com.pichicha.reto.app.api.dto.customer.CustomerCriteriaDTO;
 import com.pichicha.reto.app.api.dto.customer.CustomerDTO;
 import com.pichicha.reto.app.api.service.CustomerService;
 import com.pichicha.reto.app.api.utils.ControllerUtil;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +25,7 @@ public class CustomersController {
     }
 
     @PostMapping
-    public Flux<CustomerDTO> find(@RequestBody @Valid CustomerCriteriaDTO customerDTO) {
+    public Flux<CustomerDTO> find(@RequestBody CustomerCriteriaDTO customerDTO) {
         LOGGER.debug("find() - START: {}", customerDTO);
         return this.customerService.find(customerDTO);
     }

@@ -10,8 +10,8 @@ import lombok.Data;
 @Builder
 public class EntityStatusDTO {
 
-    @Min(value = 1, message = "validacion.entidades.id.Min.mensaje")
-    @NotNull(message = "validacion.entidades.id.NotNull.mensaje")
+    @Min(value = 1, message = "validation.id.Min.message")
+    @NotNull(message = "validation.id.NotNull.message")
     private Long id;
 
     @NotNull(message = "validacion.entidades.estado.NotNull.mensaje")

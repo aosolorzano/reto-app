@@ -11,10 +11,10 @@ import lombok.Data;
 @Builder
 public class CustomerStatusDTO {
 
-    @NotEmpty(message = "validacion.personas.identificacion.NotEmpty.mensaje")
-    @Size(min = 10, max = 10, message = "validacion.personas.identificacion.Size.mensaje")
+    @NotEmpty(message = "validation.personas.id.NotEmpty.message")
+    @Size(min = 10, max = 10, message = "validation.personas.id.Size.message")
     private String id;
 
-    @NotNull(message = "validacion.clientes.estado.NotNull.mensaje")
+    @NotNull(message = "validation.status.NotNull.message")
     private EnumStatus status;
 }
