@@ -1,7 +1,6 @@
 package com.pichicha.reto.app.api.dto.account;
 
 import com.pichicha.reto.app.api.utils.enums.EnumAccountType;
-import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,11 +8,9 @@ import lombok.Data;
 @Builder
 public class AccountCriteriaDTO {
 
-    private Long numeroCuenta;
+    private Long accountNumber;
 
-    private String clienteId;
+    private String customerId;
 
-    private EnumAccountType tipo;
-
-    private EnumStatus estado;
+    private EnumAccountType type;
 }

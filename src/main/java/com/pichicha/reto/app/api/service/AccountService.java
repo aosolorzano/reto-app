@@ -1,5 +1,7 @@
 package com.pichicha.reto.app.api.service;
 
+import com.pichicha.reto.app.api.dao.AccountDAO;
+import com.pichicha.reto.app.api.dto.account.AccountCriteriaDTO;
 import com.pichicha.reto.app.api.dto.common.EntityStatusDTO;
 import com.pichicha.reto.app.api.exception.ResourceNotFoundException;
 import com.pichicha.reto.app.api.model.Account;
@@ -16,9 +18,11 @@ import java.util.Objects;
 public class AccountService {
 
     private final AccountRepository accountRepository;
+    private final AccountDAO accountDAO;
 
-    public AccountService(AccountRepository accountRepository) {
+    public AccountService(AccountRepository accountRepository, AccountDAO accountDAO) {
         this.accountRepository = accountRepository;
+        this.accountDAO = accountDAO;
     }
 
     public Mono<Account> findById(long id) {
@@ -54,7 +58,7 @@ public class AccountService {
                 .then();
     }
 
-    public Flux<Account> findByCustomerId(String customerId) {
-        return Flux.empty();
+    public Flux<Account> find(AccountCriteriaDTO accountCriteriaDTO) {
+        return Flux.fromStream(() -> this.accountDAO.find(accountCriteriaDTO).stream());
     }
 }

@@ -6,7 +6,10 @@ import com.pichicha.reto.app.api.service.AccountService;
 import com.pichicha.reto.app.api.utils.ControllerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
 @RestController
@@ -23,7 +26,7 @@ public class AccountsController {
 
     @PostMapping
     public Flux<Account> find(@RequestBody AccountCriteriaDTO accountCriteriaDTO) {
-        LOGGER.debug("find() - START");
-        return Flux.empty();
+        LOGGER.debug("find() - START: {}", accountCriteriaDTO);
+        return this.accountService.find(accountCriteriaDTO);
     }
 }
