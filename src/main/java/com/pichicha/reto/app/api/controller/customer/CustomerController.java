@@ -1,7 +1,6 @@
 package com.pichicha.reto.app.api.controller.customer;
 
 import com.pichicha.reto.app.api.dto.customer.CustomerDTO;
-import com.pichicha.reto.app.api.dto.customer.CustomerIdDTO;
 import com.pichicha.reto.app.api.dto.customer.CustomerPasswordDTO;
 import com.pichicha.reto.app.api.dto.customer.CustomerStatusDTO;
 import com.pichicha.reto.app.api.service.CustomerService;
@@ -28,21 +27,21 @@ public class CustomerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Void> create(@RequestBody @Valid Mono<CustomerDTO> customerDTO) {
+    public Mono<CustomerDTO> create(@RequestBody @Valid Mono<CustomerDTO> customerDTO) {
         LOGGER.debug("create(): {}", customerDTO);
         return this.customerService.create(customerDTO);
     }
 
-    @PostMapping(ControllerUtil.FIND_PATH)
+    @GetMapping(ControllerUtil.FIND_PATH + "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<CustomerDTO> findById(@RequestBody @Valid CustomerIdDTO customerIdDTO) {
-        LOGGER.debug("findById() - START: {}", customerIdDTO);
-        return this.customerService.findById(customerIdDTO.id());
+    public Mono<CustomerDTO> findById(@PathVariable("id") String customerId) {
+        LOGGER.debug("findById() - START: {}", customerId);
+        return this.customerService.findById(customerId);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public Mono<Void> update(@RequestBody @Valid CustomerDTO customerDTO) {
+    public Mono<CustomerDTO> update(@RequestBody @Valid CustomerDTO customerDTO) {
         LOGGER.debug("update(): {}", customerDTO);
         return this.customerService.update(customerDTO);
     }
@@ -61,11 +60,11 @@ public class CustomerController {
         return this.customerService.updatePassword(customerPasswordDTO);
     }
 
-    @PostMapping(ControllerUtil.DELETE_PATH)
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> delete(@RequestBody @Valid CustomerIdDTO customerIdDTO) {
-        LOGGER.debug("delete(): {}", customerIdDTO);
-        return this.customerService.delete(customerIdDTO.id());
+    public Mono<Void> delete(@PathVariable("id") String customerId) {
+        LOGGER.debug("delete(): {}", customerId);
+        return this.customerService.delete(customerId);
     }
 
     @GetMapping("/templateBody")

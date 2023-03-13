@@ -3,20 +3,12 @@ package com.pichicha.reto.app.api.model;
 import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import com.pichicha.reto.app.api.utils.enums.EnumTransactionType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.ZonedDateTime;
 
 @Data
 @Entity
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "MOVIMIENTOS")
 public class Transaction {
 
@@ -27,26 +19,22 @@ public class Transaction {
     private Long id;
 
     @Column(name = "FECHA", nullable = false)
-    private ZonedDateTime fecha;
+    private ZonedDateTime date;
 
     @Column(name = "NUMERO_CUENTA", nullable = false)
-    @NotNull(message = "validation.accounts.id.NotNull.message")
-    private Long numeroCuenta;
+    private Long accountNumber;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "TIPO", length = 3, nullable = false)
-    @NotNull(message = "validation.type.NotNull.message")
-    private EnumTransactionType tipo;
+    private EnumTransactionType type;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ESTADO", length = 3, nullable = false)
-    private EnumStatus estado;
+    private EnumStatus status;
 
     @Column(name = "VALOR", nullable = false)
-    @Min(value = 1, message = "validation.transactions.value.Min.message")
-    private double valor;
+    private double value;
 
     @Column(name = "SALDO_INICIAL", nullable = false)
-    private double saldoInicial;
-
+    private double initialBalance;
 }

@@ -41,6 +41,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return Mono.just(new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND));
     }
 
+    @ExceptionHandler(ValidationException.class)
+    public final Mono<ResponseEntity<ErrorDetailsDTO>> handleValidationException(
+            ValidationException exception,
+            ServerWebExchange exchange) {
+        ErrorDetailsDTO errorDetails = this.constructErrorDetailsDTO(exchange, exception);
+        super.logger.error("handleValidationException(): " + errorDetails);
+        return Mono.just(new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST));
+    }
+
     @ExceptionHandler(ApplicationException.class)
     public final Mono<ResponseEntity<ErrorDetailsDTO>> handleApplicationException(
             ApplicationException exception,

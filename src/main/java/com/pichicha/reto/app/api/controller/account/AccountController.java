@@ -1,7 +1,7 @@
 package com.pichicha.reto.app.api.controller.account;
 
-import com.pichicha.reto.app.api.dto.common.EntityIdDTO;
-import com.pichicha.reto.app.api.dto.common.EntityStatusDTO;
+import com.pichicha.reto.app.api.dto.common.IdCriteriaDTO;
+import com.pichicha.reto.app.api.dto.common.StatusCriteriaDTO;
 import com.pichicha.reto.app.api.model.Account;
 import com.pichicha.reto.app.api.service.AccountService;
 import com.pichicha.reto.app.api.utils.ControllerUtil;
@@ -33,23 +33,23 @@ public class AccountController {
 
     @PostMapping(ControllerUtil.FIND_PATH)
     @ResponseStatus(HttpStatus.OK)
-    public Mono<Account> findById(@RequestBody @Valid EntityIdDTO entityIdDTO) {
-        LOGGER.debug("findById() - START: {}", entityIdDTO);
-        return this.accountService.findById(entityIdDTO.id());
+    public Mono<Account> findById(@RequestBody @Valid IdCriteriaDTO idCriteriaDTO) {
+        LOGGER.debug("findById() - START: {}", idCriteriaDTO);
+        return this.accountService.findById(idCriteriaDTO.id());
     }
 
     @PutMapping(ControllerUtil.STATUS_PATH)
     @ResponseStatus(HttpStatus.OK)
-    public Mono<Void> updateStatus(@RequestBody @Valid EntityStatusDTO entityStatusDTO) {
-        LOGGER.debug("updateStatus(): {}", entityStatusDTO);
-        return this.accountService.updateStatus(entityStatusDTO);
+    public Mono<Void> updateStatus(@RequestBody @Valid StatusCriteriaDTO statusCriteriaDTO) {
+        LOGGER.debug("updateStatus(): {}", statusCriteriaDTO);
+        return this.accountService.updateStatus(statusCriteriaDTO);
     }
 
     @PostMapping(ControllerUtil.DELETE_PATH)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> delete(@RequestBody @Valid EntityIdDTO entityIdDTO) {
-        LOGGER.debug("delete(): {}", entityIdDTO);
-        return this.accountService.delete(entityIdDTO.id());
+    public Mono<Void> delete(@RequestBody @Valid IdCriteriaDTO idCriteriaDTO) {
+        LOGGER.debug("delete(): {}", idCriteriaDTO);
+        return this.accountService.delete(idCriteriaDTO.id());
     }
 
 }

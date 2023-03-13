@@ -33,30 +33,30 @@ public class CustomerService {
     }
 
     public Mono<CustomerDTO> findById(String id) {
-        return Mono
-                .fromSupplier(() ->
-                        this.customerRepository.findById(id).orElseThrow(() ->
-                                new ResourceNotFoundException(EnumAppError.CUSTOMER_NOT_FOUND, id)))
-                .map(EntityUtil::toDto)
+        return Mono.fromSupplier(() ->
+                        this.customerRepository.findById(id)
+                                .orElseThrow(() ->
+                                        new ResourceNotFoundException(EnumAppError.CUSTOMER_NOT_FOUND, id)))
+                .map(EntityUtil::toCustomerDTO)
                 .subscribeOn(Schedulers.boundedElastic());
     }
 
-    public Mono<Void> create(Mono<CustomerDTO> customer) {
+    public Mono<CustomerDTO> create(Mono<CustomerDTO> customer) {
         return customer
-                .map(EntityUtil::toEntity)
+                .map(EntityUtil::toCustomerEntity)
                 .doOnNext(customerEntity -> customerEntity.setClave(PasswdUtil.generatePassword()))
-                .doOnNext(customerEntity -> customerEntity.setEstado(EnumStatus.SUS))
+                .doOnNext(customerEntity -> customerEntity.setEstado(EnumStatus.ACT))
                 .map(this.customerRepository::save)
                 .doOnNext(this.emailService::sendCreationEmail)
-                .then();
+                .map(EntityUtil::toCustomerDTO);
     }
 
-    public Mono<Void> update(CustomerDTO updatedCustomer) {
+    public Mono<CustomerDTO> update(CustomerDTO updatedCustomer) {
         return this.findEntityById(updatedCustomer.getId())
                 .doOnNext(actualCustomer -> BeanUtils.copyProperties(updatedCustomer, actualCustomer))
                 .map(this.customerRepository::save)
                 .doOnNext(this.emailService::sendModificationEmail)
-                .then();
+                .map(EntityUtil::toCustomerDTO);
     }
 
     public Mono<Void> updateStatus(CustomerStatusDTO customerStatusDTO) {

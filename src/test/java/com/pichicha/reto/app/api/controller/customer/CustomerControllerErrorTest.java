@@ -3,7 +3,6 @@ package com.pichicha.reto.app.api.controller.customer;
 import com.pichicha.reto.app.api.common.AbstractContainerBase;
 import com.pichicha.reto.app.api.dto.common.ErrorDetailsDTO;
 import com.pichicha.reto.app.api.dto.customer.CustomerDTO;
-import com.pichicha.reto.app.api.dto.customer.CustomerIdDTO;
 import com.pichicha.reto.app.api.utils.ControllerUtil;
 import com.pichicha.reto.app.api.utils.DataUtil;
 import com.pichicha.reto.app.api.utils.enums.EnumAppError;
@@ -44,9 +43,8 @@ class CustomerControllerErrorTest extends AbstractContainerBase {
     @DisplayName("Find non existing customer - Spanish")
     void givenNonExistingCustomer_whenFindById_thenReturnError404() {
         this.webTestClient
-                .post()
-                .uri(ControllerUtil.CUSTOMER_PATH.concat(ControllerUtil.FIND_PATH))
-                .bodyValue(new CustomerIdDTO(customerDTO.getId()))
+                .get()
+                .uri(ControllerUtil.CUSTOMER_PATH.concat(ControllerUtil.FIND_PATH).concat("/{id}"), customerDTO.getId())
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.ES.getCode())
                 .exchange()
                 .expectStatus().isNotFound()
@@ -63,9 +61,8 @@ class CustomerControllerErrorTest extends AbstractContainerBase {
     @DisplayName("Find non existing customer - English")
     void givenNonExistingCustomer_whenFindById_thenReturnError404InEnglish() {
         this.webTestClient
-                .post()
-                .uri(ControllerUtil.CUSTOMER_PATH.concat(ControllerUtil.FIND_PATH))
-                .bodyValue(new CustomerIdDTO(customerDTO.getId()))
+                .get()
+                .uri(ControllerUtil.CUSTOMER_PATH.concat(ControllerUtil.FIND_PATH).concat("/{id}"), customerDTO.getId())
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.EN.getCode())
                 .exchange()
                 .expectStatus().isNotFound()
@@ -120,9 +117,8 @@ class CustomerControllerErrorTest extends AbstractContainerBase {
     @DisplayName("Delete non existing customer - Spanish")
     void givenNonExistingCustomer_whenDelete_thenReturnError404() {
         this.webTestClient
-                .post()
-                .uri(ControllerUtil.CUSTOMER_PATH.concat(ControllerUtil.DELETE_PATH))
-                .bodyValue(new CustomerIdDTO(customerDTO.getId()))
+                .delete()
+                .uri(ControllerUtil.CUSTOMER_PATH.concat("/{id}"), customerDTO.getId())
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.ES.getCode())
                 .exchange()
                 .expectStatus().isNotFound()
@@ -139,9 +135,8 @@ class CustomerControllerErrorTest extends AbstractContainerBase {
     @DisplayName("Delete non existing customer - English")
     void givenNonExistingCustomer_whenDelete_thenReturnError404InEnglish() {
         this.webTestClient
-                .post()
-                .uri(ControllerUtil.CUSTOMER_PATH.concat(ControllerUtil.DELETE_PATH))
-                .bodyValue(new CustomerIdDTO(customerDTO.getId()))
+                .delete()
+                .uri(ControllerUtil.CUSTOMER_PATH.concat("/{id}"), customerDTO.getId())
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.EN.getCode())
                 .exchange()
                 .expectStatus().isNotFound()

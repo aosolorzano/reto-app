@@ -1,15 +1,14 @@
 package com.pichicha.reto.app.api.controller.account;
 
 import com.pichicha.reto.app.api.common.AbstractContainerBase;
-import com.pichicha.reto.app.api.dto.common.EntityIdDTO;
-import com.pichicha.reto.app.api.dto.common.EntityStatusDTO;
+import com.pichicha.reto.app.api.dto.common.IdCriteriaDTO;
+import com.pichicha.reto.app.api.dto.common.StatusCriteriaDTO;
 import com.pichicha.reto.app.api.dto.common.ErrorDetailsDTO;
 import com.pichicha.reto.app.api.model.Account;
 import com.pichicha.reto.app.api.utils.ControllerUtil;
 import com.pichicha.reto.app.api.utils.DataUtil;
 import com.pichicha.reto.app.api.utils.enums.EnumAppError;
 import com.pichicha.reto.app.api.utils.enums.EnumLanguageCode;
-import org.assertj.core.api.Assertions;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -25,16 +24,17 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.Locale;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 @TestInstance(PER_CLASS)
 @AutoConfigureWebTestClient
 @TestPropertySource(locations = "classpath:application-test.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AccountControllerExceptionsTest extends AbstractContainerBase {
+class AccountControllerErrorTest extends AbstractContainerBase {
 
-    public static final Long ID_NO_EXISTENTE = 890100L;
-    public static final String CLIENT_ID = "0987654321";
+    public static final Long NON_EXISTING_ID = 890100L;
+    public static final String CUSTOMER_ID = "0987654321";
 
     @Autowired
     private MessageSource messageSource;
@@ -46,9 +46,9 @@ class AccountControllerExceptionsTest extends AbstractContainerBase {
 
     @BeforeAll
     public static void init() {
-        account = DataUtil.getAccountTemplateDTO();
-        account.setNumeroCuenta(ID_NO_EXISTENTE);
-        account.setClienteId(CLIENT_ID);
+        account = DataUtil.getAccountTemplate();
+        account.setNumeroCuenta(NON_EXISTING_ID);
+        account.setClienteId(CUSTOMER_ID);
     }
 
     @Test
@@ -57,15 +57,15 @@ class AccountControllerExceptionsTest extends AbstractContainerBase {
         this.webTestClient
                 .post()
                 .uri(ControllerUtil.ACCOUNT_PATH.concat(ControllerUtil.FIND_PATH))
-                .bodyValue(new EntityIdDTO(account.getNumeroCuenta()))
+                .bodyValue(new IdCriteriaDTO(account.getNumeroCuenta()))
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.ES.getCode())
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
-                    Assertions.assertThat(errorDetailsDTO.getErrorCode())
+                    assertThat(errorDetailsDTO.getErrorCode())
                             .isEqualTo(EnumAppError.ACCOUNT_NOT_FOUND.getCode());
-                    Assertions.assertThat(errorDetailsDTO.getErrorMessage())
+                    assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo(getMessageSourceMessage(EnumLanguageCode.ES));
                 });
     }
@@ -76,16 +76,15 @@ class AccountControllerExceptionsTest extends AbstractContainerBase {
         this.webTestClient
                 .post()
                 .uri(ControllerUtil.ACCOUNT_PATH.concat(ControllerUtil.FIND_PATH))
-                .bodyValue(new EntityIdDTO(account.getNumeroCuenta()))
+                .bodyValue(new IdCriteriaDTO(account.getNumeroCuenta()))
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.EN.getCode())
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
-                    Assertions.assertThat(errorDetailsDTO.getErrorCode())
+                    assertThat(errorDetailsDTO.getErrorCode())
                             .isEqualTo(EnumAppError.ACCOUNT_NOT_FOUND.getCode());
-                    Assertions.assertThat(errorDetailsDTO.getErrorMessage())
-                            .isEqualTo(errorDetailsDTO.getErrorMessage())
+                    assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo(getMessageSourceMessage(EnumLanguageCode.EN));
                 });
     }
@@ -93,7 +92,7 @@ class AccountControllerExceptionsTest extends AbstractContainerBase {
     @Test
     @DisplayName("Update status for non existing account - Spanish")
     void givenNonExistingAccount_whenUpdateStatus_thenReturnError404() {
-        EntityStatusDTO entityStatusDTO = EntityStatusDTO.builder()
+        StatusCriteriaDTO statusCriteriaDTO = StatusCriteriaDTO.builder()
                 .id(account.getNumeroCuenta())
                 .status(account.getEstado())
                 .build();
@@ -101,14 +100,14 @@ class AccountControllerExceptionsTest extends AbstractContainerBase {
                 .put()
                 .uri(ControllerUtil.ACCOUNT_PATH.concat(ControllerUtil.STATUS_PATH))
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.ES.getCode())
-                .bodyValue(entityStatusDTO)
+                .bodyValue(statusCriteriaDTO)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
-                    Assertions.assertThat(errorDetailsDTO.getErrorCode())
+                    assertThat(errorDetailsDTO.getErrorCode())
                             .isEqualTo(EnumAppError.ACCOUNT_NOT_FOUND.getCode());
-                    Assertions.assertThat(errorDetailsDTO.getErrorMessage())
+                    assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo(getMessageSourceMessage(EnumLanguageCode.ES));
                 });
     }
@@ -116,7 +115,7 @@ class AccountControllerExceptionsTest extends AbstractContainerBase {
     @Test
     @DisplayName("Update status for non existing account - English")
     void givenNonExistingAccount_whenUpdateStatus_thenReturnError404InEnglish() {
-        EntityStatusDTO entityStatusDTO = EntityStatusDTO.builder()
+        StatusCriteriaDTO statusCriteriaDTO = StatusCriteriaDTO.builder()
                 .id(account.getNumeroCuenta())
                 .status(account.getEstado())
                 .build();
@@ -124,15 +123,14 @@ class AccountControllerExceptionsTest extends AbstractContainerBase {
                 .put()
                 .uri(ControllerUtil.ACCOUNT_PATH.concat(ControllerUtil.STATUS_PATH))
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.EN.getCode())
-                .bodyValue(entityStatusDTO)
+                .bodyValue(statusCriteriaDTO)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
-                    Assertions.assertThat(errorDetailsDTO.getErrorCode())
+                    assertThat(errorDetailsDTO.getErrorCode())
                             .isEqualTo(EnumAppError.ACCOUNT_NOT_FOUND.getCode());
-                    Assertions.assertThat(errorDetailsDTO.getErrorMessage())
-                            .isEqualTo(errorDetailsDTO.getErrorMessage())
+                    assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo(getMessageSourceMessage(EnumLanguageCode.EN));
                 });
     }
@@ -143,16 +141,15 @@ class AccountControllerExceptionsTest extends AbstractContainerBase {
         this.webTestClient
                 .post()
                 .uri(ControllerUtil.ACCOUNT_PATH.concat(ControllerUtil.DELETE_PATH))
-                .bodyValue(new EntityIdDTO(account.getNumeroCuenta()))
+                .bodyValue(new IdCriteriaDTO(account.getNumeroCuenta()))
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.ES.getCode())
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
-                    Assertions.assertThat(errorDetailsDTO.getErrorCode())
+                    assertThat(errorDetailsDTO.getErrorCode())
                             .isEqualTo(EnumAppError.ACCOUNT_NOT_FOUND.getCode());
-                    Assertions.assertThat(errorDetailsDTO.getErrorMessage())
-                            .isEqualTo(errorDetailsDTO.getErrorMessage())
+                    assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo(getMessageSourceMessage(EnumLanguageCode.ES));
                 });
     }
@@ -163,16 +160,15 @@ class AccountControllerExceptionsTest extends AbstractContainerBase {
         this.webTestClient
                 .post()
                 .uri(ControllerUtil.ACCOUNT_PATH.concat(ControllerUtil.DELETE_PATH))
-                .bodyValue(new EntityIdDTO(account.getNumeroCuenta()))
+                .bodyValue(new IdCriteriaDTO(account.getNumeroCuenta()))
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.EN.getCode())
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
-                    Assertions.assertThat(errorDetailsDTO.getErrorCode())
+                    assertThat(errorDetailsDTO.getErrorCode())
                             .isEqualTo(EnumAppError.ACCOUNT_NOT_FOUND.getCode());
-                    Assertions.assertThat(errorDetailsDTO.getErrorMessage())
-                            .isEqualTo(errorDetailsDTO.getErrorMessage())
+                    assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo(getMessageSourceMessage(EnumLanguageCode.EN));
                 });
     }

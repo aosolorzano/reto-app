@@ -8,12 +8,12 @@ import lombok.Data;
 
 @Data
 @Builder
-public class EntityStatusDTO {
+public class StatusCriteriaDTO {
 
     @Min(value = 1, message = "validation.id.Min.message")
     @NotNull(message = "validation.id.NotNull.message")
     private Long id;
 
-    @NotNull(message = "validacion.entidades.estado.NotNull.mensaje")
+    @NotNull(message = "validation.status.NotNull.message")
     private EnumStatus status;
 }

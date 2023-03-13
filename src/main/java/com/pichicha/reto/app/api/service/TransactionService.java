@@ -1,14 +1,17 @@
 package com.pichicha.reto.app.api.service;
 
+import com.pichicha.reto.app.api.dto.transaction.TransactionCreationDTO;
+import com.pichicha.reto.app.api.dto.transaction.TransactionDTO;
 import com.pichicha.reto.app.api.exception.TransactionException;
 import com.pichicha.reto.app.api.exception.ResourceNotFoundException;
 import com.pichicha.reto.app.api.model.Account;
 import com.pichicha.reto.app.api.model.Transaction;
-import com.pichicha.reto.app.api.repository.AccountRepository;
 import com.pichicha.reto.app.api.repository.TransactionRepository;
+import com.pichicha.reto.app.api.utils.EntityUtil;
 import com.pichicha.reto.app.api.utils.enums.EnumAppError;
 import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import com.pichicha.reto.app.api.utils.enums.EnumTransactionType;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -20,83 +23,85 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
 
-    private final AccountRepository accountRepository;
-
     private final AccountService accountService;
 
-    public TransactionService(TransactionRepository transactionRepository, AccountService accountService,
-                              AccountRepository accountRepository) {
+    public TransactionService(TransactionRepository transactionRepository, AccountService accountService) {
         this.transactionRepository = transactionRepository;
         this.accountService = accountService;
-        this.accountRepository = accountRepository;
     }
 
-    public Mono<Transaction> buscarPorId(long id) {
-        return Mono.fromSupplier(() -> this.transactionRepository.findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException(EnumAppError.ACCOUNT_NOT_FOUND, id)))
-                .subscribeOn(Schedulers.boundedElastic());
+    public Mono<TransactionDTO> create(TransactionCreationDTO newTransaction) {
+        return this.accountService.findById(newTransaction.getAccountNumber())
+                .doOnNext(account -> this.updateBalanceForCreation(account, newTransaction))
+                .map(updatedAccount -> this.createTransaction(updatedAccount, newTransaction))
+                .map(EntityUtil::toTransactionDTO);
     }
 
-    public Mono<Transaction> crear(Transaction nuevoTransaction) {
-        return this.accountService.findById(nuevoTransaction.getNumeroCuenta())
-                .publishOn(Schedulers.boundedElastic())
-                .map(cuenta -> {
-                    double saldoCuenta = cuenta.getSaldo();
-                    nuevoTransaction.setSaldoInicial(saldoCuenta);
-                    if (nuevoTransaction.getTipo().equals(EnumTransactionType.RET)) {
-                        saldoCuenta -= nuevoTransaction.getValor();
-                    } else if (nuevoTransaction.getTipo().equals(EnumTransactionType.DEP)) {
-                        saldoCuenta += nuevoTransaction.getValor();
-                    }
-                    this.validarSaldoFinal(nuevoTransaction, saldoCuenta);
-                    return this.accountService.updateBalance(cuenta.getNumeroCuenta(), saldoCuenta);
-                })
-                .publishOn(Schedulers.boundedElastic())
-                .map(cuenta -> {
-                    nuevoTransaction.setFecha(ZonedDateTime.now());
-                    nuevoTransaction.setEstado(EnumStatus.ACT);
-                    return this.transactionRepository.save(nuevoTransaction);
-                });
+    public Mono<TransactionDTO> findById(TransactionDTO transactionDTO) {
+        return this.findTransactionById(transactionDTO.getId())
+                .map(EntityUtil::toTransactionDTO);
     }
 
-    public Mono<Void> eliminar(Long id) {
-        return this.buscarPorId(id)
-                .publishOn(Schedulers.boundedElastic())
-                .map(movimiento -> {
-                    this.transactionRepository.delete(movimiento);
-                    return movimiento;
-                })
-                .doOnNext(movimientoExistente -> {
-                    Account account = this.validarCuenta(movimientoExistente);
-                    double saldoCuenta = account.getSaldo();
-                    if (movimientoExistente.getTipo().equals(EnumTransactionType.RET)) {
-                        saldoCuenta += movimientoExistente.getValor();
-                    } else if (movimientoExistente.getTipo().equals(EnumTransactionType.DEP)) {
-                        saldoCuenta -= movimientoExistente.getValor();
-                    }
-                    this.validarSaldoFinal(movimientoExistente, saldoCuenta);
-                    this.accountService.updateBalance(movimientoExistente.getNumeroCuenta(),
-                            saldoCuenta);
-                })
-                .then();
+    public Mono<TransactionDTO> update(TransactionDTO transactionDTO) {
+        return this.delete(transactionDTO)
+                .map(deletedTransaction -> EntityUtil.toTransactionCreationDTO(transactionDTO))
+                .flatMap(this::create);
+
     }
 
-    private void validarSaldoFinal(Transaction transactionExistente, double saldoCuenta) {
-        if (saldoCuenta < 0) {
-            transactionExistente.setFecha(ZonedDateTime.now());
-            transactionExistente.setEstado(EnumStatus.INA);
-            this.transactionRepository.save(transactionExistente);
+    public Mono<TransactionDTO> delete(TransactionDTO transactionDTO) {
+        return this.findTransactionById(transactionDTO.getId())
+                .doOnNext(this::updateBalanceForDeletion)
+                .doOnNext(this.transactionRepository::delete)
+                .map(EntityUtil::toTransactionDTO);
+    }
+
+    private void updateBalanceForCreation(Account account, TransactionCreationDTO newTransaction) {
+        double newBalance = account.getSaldo();
+        if (newTransaction.getType().equals(EnumTransactionType.RET)) {
+            newBalance -= newTransaction.getValue();
+        } else if (newTransaction.getType().equals(EnumTransactionType.DEP)) {
+            newBalance += newTransaction.getValue();
+        }
+        verifyBalance(account, newBalance);
+        Account updatedAccount = this.accountService.updateBalance(account.getNumeroCuenta(), newBalance);
+        updatedAccount.setSaldoAnterior(account.getSaldo());
+    }
+
+    private void updateBalanceForDeletion(Transaction transaction) {
+        if (transaction.getStatus().equals(EnumStatus.INA)) {
+            throw new TransactionException(EnumAppError.NOT_ACTIVE_TRANSACTION, transaction.getId());
+        }
+        Account account = this.accountService.findByTransaction(transaction);
+        double actualBalance = account.getSaldo();
+        if (transaction.getType().equals(EnumTransactionType.RET)) {
+            actualBalance += transaction.getValue();
+        } else if (transaction.getType().equals(EnumTransactionType.DEP)) {
+            actualBalance -= transaction.getValue();
+        }
+        verifyBalance(account, actualBalance);
+        this.accountService.updateBalance(transaction.getAccountNumber(), actualBalance);
+    }
+
+    private static void verifyBalance(Account account, double newBalance) {
+        if (newBalance < 0) {
             throw new TransactionException(EnumAppError.INSUFFICIENT_BALANCE,
-                    transactionExistente.getNumeroCuenta());
+                    account.getNumeroCuenta());
         }
     }
 
-    private Account validarCuenta(Transaction transactionExistente) {
-        Account account = this.accountRepository.findById(transactionExistente.getNumeroCuenta()).orElse(null);
-        if (account == null) {
-            throw new ResourceNotFoundException(EnumAppError.ACCOUNT_NOT_FOUND,
-                    transactionExistente.getNumeroCuenta());
-        }
-        return account;
+    private Transaction createTransaction(Account account, TransactionCreationDTO newTransaction) {
+        Transaction transaction = new Transaction();
+        BeanUtils.copyProperties(newTransaction, transaction);
+        transaction.setDate(ZonedDateTime.now());
+        transaction.setStatus(EnumStatus.ACT);
+        transaction.setInitialBalance(account.getSaldoAnterior());
+        return this.transactionRepository.save(transaction);
+    }
+
+    public Mono<Transaction> findTransactionById(long id) {
+        return Mono.fromSupplier(() -> this.transactionRepository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException(EnumAppError.TRANSACTION_NOT_FOUND, id)))
+                .subscribeOn(Schedulers.boundedElastic());
     }
 }

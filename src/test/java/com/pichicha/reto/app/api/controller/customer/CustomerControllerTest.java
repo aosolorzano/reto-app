@@ -1,12 +1,13 @@
 package com.pichicha.reto.app.api.controller.customer;
 
 import com.pichicha.reto.app.api.common.AbstractContainerBase;
-import com.pichicha.reto.app.api.dto.customer.*;
+import com.pichicha.reto.app.api.dto.customer.CustomerDTO;
+import com.pichicha.reto.app.api.dto.customer.CustomerPasswordDTO;
+import com.pichicha.reto.app.api.dto.customer.CustomerStatusDTO;
 import com.pichicha.reto.app.api.utils.ControllerUtil;
 import com.pichicha.reto.app.api.utils.DataUtil;
 import com.pichicha.reto.app.api.utils.enums.EnumGenre;
 import com.pichicha.reto.app.api.utils.enums.EnumStatus;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -46,21 +47,9 @@ class CustomerControllerTest extends AbstractContainerBase {
                 .post()
                 .uri(ControllerUtil.CUSTOMER_PATH)
                 .bodyValue(customerDTO)
-                .exchange()
-                .expectStatus().is2xxSuccessful();
-    }
-
-    @Test
-    @Order(2)
-    @DisplayName("Find created customer")
-    void givenCustomerData_whenFind_thenReturnCustomerObject() {
-        this.webTestClient
-                .post()
-                .uri(ControllerUtil.CUSTOMER_PATH.concat(ControllerUtil.FIND_PATH))
-                .bodyValue(new CustomerIdDTO(customerDTO.getId()))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
-                .expectStatus().is2xxSuccessful()
+                .expectStatus().isCreated()
                 .expectBody(CustomerDTO.class)
                 .value(customerResponse -> {
                     assertThat(customerResponse.getId()).isEqualTo(CUSTOMER_ID);
@@ -73,7 +62,7 @@ class CustomerControllerTest extends AbstractContainerBase {
     }
 
     @Test
-    @Order(3)
+    @Order(2)
     @DisplayName("Update customer")
     void givenCustomerData_whenModifyData_thenUpdateCustomerObject() {
         customerDTO.setNombre("Updated Name");
@@ -83,18 +72,6 @@ class CustomerControllerTest extends AbstractContainerBase {
                 .put()
                 .uri(ControllerUtil.CUSTOMER_PATH)
                 .bodyValue(customerDTO)
-                .exchange()
-                .expectStatus().is2xxSuccessful();
-    }
-
-    @Test
-    @Order(4)
-    @DisplayName("Find updated customer")
-    void givenUpdatedCustomerData_whenFindById_thenReturnCustomerObject() {
-        this.webTestClient
-                .post()
-                .uri(ControllerUtil.CUSTOMER_PATH.concat(ControllerUtil.FIND_PATH))
-                .bodyValue(new CustomerIdDTO(customerDTO.getId()))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().is2xxSuccessful()
@@ -108,7 +85,7 @@ class CustomerControllerTest extends AbstractContainerBase {
     }
 
     @Test
-    @Order(5)
+    @Order(3)
     @DisplayName("Update status")
     void givenCustomerData_whenUpdateStatus_thenUpdateCustomerObject() {
         var customerStatusDTO = CustomerStatusDTO.builder()
@@ -124,7 +101,7 @@ class CustomerControllerTest extends AbstractContainerBase {
     }
 
     @Test
-    @Order(6)
+    @Order(4)
     @DisplayName("Update password")
     void givenCustomerData_whenUpdatePasswd_thenUpdateCustomerObject() {
         var customerPasswordDTO = CustomerPasswordDTO.builder()
@@ -140,13 +117,31 @@ class CustomerControllerTest extends AbstractContainerBase {
     }
 
     @Test
-    @Order(7)
+    @Order(5)
+    @DisplayName("Find customer")
+    void givenCustomerData_whenFindById_thenReturnCustomerObject() {
+        this.webTestClient
+                .get()
+                .uri(ControllerUtil.CUSTOMER_PATH.concat(ControllerUtil.FIND_PATH).concat("/{id}"), CUSTOMER_ID)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().is2xxSuccessful()
+                .expectBody(CustomerDTO.class)
+                .value(customerResponse -> {
+                    assertThat(customerResponse.getId()).isEqualTo(CUSTOMER_ID);
+                    assertThat(customerResponse.getNombre()).isEqualTo("Updated Name");
+                    assertThat(customerResponse.getDireccion()).isEqualTo("Updated Address");
+                    assertThat(customerResponse.getTelefono()).isEqualTo("1234567890");
+                });
+    }
+
+    @Test
+    @Order(6)
     @DisplayName("Delete customer")
     void givenCustomerData_whenDeleteById_thenDeleteCustomerObject() {
         this.webTestClient
-                .post()
-                .uri(ControllerUtil.CUSTOMER_PATH.concat(ControllerUtil.DELETE_PATH))
-                .bodyValue(new CustomerIdDTO(customerDTO.getId()))
+                .delete()
+                .uri(ControllerUtil.CUSTOMER_PATH.concat("/{id}"), CUSTOMER_ID)
                 .exchange()
                 .expectStatus().is2xxSuccessful();
     }

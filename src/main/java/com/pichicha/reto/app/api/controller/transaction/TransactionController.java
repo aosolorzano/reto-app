@@ -1,14 +1,22 @@
 package com.pichicha.reto.app.api.controller.transaction;
 
-import com.pichicha.reto.app.api.model.Transaction;
+import com.pichicha.reto.app.api.dto.transaction.TransactionCreationDTO;
+import com.pichicha.reto.app.api.dto.transaction.TransactionDTO;
+import com.pichicha.reto.app.api.dto.transaction.TransactionOperationDTO;
+import com.pichicha.reto.app.api.dto.transaction.TransactionResponseDTO;
 import com.pichicha.reto.app.api.service.TransactionService;
+import com.pichicha.reto.app.api.utils.BeanValidationUtil;
 import com.pichicha.reto.app.api.utils.ControllerUtil;
-import jakarta.validation.Valid;
+import com.pichicha.reto.app.api.utils.EntityUtil;
+import jakarta.validation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
+import java.time.ZonedDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping(ControllerUtil.TRANSACTION_PATH)
@@ -23,23 +31,34 @@ public class TransactionController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Transaction> crear(@RequestBody @Valid Transaction nuevoTransaction) {
-        LOGGER.debug("crear(): {}", nuevoTransaction);
-        return this.transactionService.crear(nuevoTransaction);
-    }
-
-    @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> eliminar(@PathVariable("id") Long id) {
-        LOGGER.debug("eliminar(): {}", id);
-        return this.transactionService.eliminar(id);
-    }
-
-    @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<Transaction> buscarPorId(@PathVariable("id") Long id) {
-        LOGGER.debug("buscarPorId() - START: {}", id);
-        return this.transactionService.buscarPorId(id);
+    public Mono<TransactionResponseDTO> operate(@RequestBody @Valid TransactionOperationDTO transactionOperation) {
+        LOGGER.debug("operate(): {}", transactionOperation);
+        return (switch (transactionOperation.getOperation()) {
+            case CREATE -> this.transactionService.create(this.getCreationDTO(transactionOperation));
+            case READ -> this.transactionService.findById(this.getTransactionDTO(transactionOperation));
+            case UPDATE -> this.transactionService.update(this.getTransactionDTO(transactionOperation));
+            case DELETE -> this.transactionService.delete(this.getTransactionDTO(transactionOperation));
+        }).map(this::getResponseDTO);
+    }
+
+    private TransactionCreationDTO getCreationDTO(TransactionOperationDTO transactionOperation) {
+        TransactionCreationDTO transactionCreationDTO = EntityUtil.toTransactionCreationDTO(transactionOperation
+                .getTransaction());
+        BeanValidationUtil.validate(transactionCreationDTO);
+        return transactionCreationDTO;
+    }
+
+    private TransactionDTO getTransactionDTO(TransactionOperationDTO transactionOperation) {
+        TransactionDTO transactionDTO = transactionOperation.getTransaction();
+        BeanValidationUtil.validate(transactionDTO);
+        return transactionOperation.getTransaction();
+    }
+
+    private TransactionResponseDTO getResponseDTO(TransactionDTO transaction) {
+        return TransactionResponseDTO.builder()
+                .date(ZonedDateTime.now())
+                .transactions(List.of(transaction))
+                .build();
     }
 }

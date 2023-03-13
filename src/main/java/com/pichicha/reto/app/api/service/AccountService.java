@@ -2,11 +2,14 @@ package com.pichicha.reto.app.api.service;
 
 import com.pichicha.reto.app.api.dao.AccountDAO;
 import com.pichicha.reto.app.api.dto.account.AccountCriteriaDTO;
-import com.pichicha.reto.app.api.dto.common.EntityStatusDTO;
+import com.pichicha.reto.app.api.dto.common.StatusCriteriaDTO;
 import com.pichicha.reto.app.api.exception.ResourceNotFoundException;
+import com.pichicha.reto.app.api.exception.TransactionException;
 import com.pichicha.reto.app.api.model.Account;
+import com.pichicha.reto.app.api.model.Transaction;
 import com.pichicha.reto.app.api.repository.AccountRepository;
 import com.pichicha.reto.app.api.utils.enums.EnumAppError;
+import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -36,9 +39,9 @@ public class AccountService {
                 .map(this.accountRepository::save);
     }
 
-    public Mono<Void> updateStatus(EntityStatusDTO entityStatusDTO) {
-        return this.findById(entityStatusDTO.getId())
-                .doOnNext(actualAccount -> actualAccount.setEstado(entityStatusDTO.getStatus()))
+    public Mono<Void> updateStatus(StatusCriteriaDTO statusCriteriaDTO) {
+        return this.findById(statusCriteriaDTO.getId())
+                .doOnNext(actualAccount -> actualAccount.setEstado(statusCriteriaDTO.getStatus()))
                 .map(this.accountRepository::save)
                 .then();
     }
@@ -47,6 +50,10 @@ public class AccountService {
         Account actualAccount = this.accountRepository.findById(accountId).orElse(null);
         if (Objects.isNull(actualAccount)) {
             throw new ResourceNotFoundException(EnumAppError.ACCOUNT_NOT_FOUND, accountId);
+        } else if (newBalance < 0) {
+            throw new TransactionException(EnumAppError.INSUFFICIENT_BALANCE);
+        } else if (!actualAccount.getEstado().equals(EnumStatus.ACT)) {
+            throw new TransactionException(EnumAppError.NOT_ACTIVE_ACCOUNT);
         }
         actualAccount.setSaldo(newBalance);
         return this.accountRepository.save(actualAccount);
@@ -56,6 +63,15 @@ public class AccountService {
         return this.findById(accountId)
                 .doOnNext(this.accountRepository::delete)
                 .then();
+    }
+
+    public Account findByTransaction(Transaction transaction) {
+        Account account = this.accountRepository.findById(transaction.getAccountNumber()).orElse(null);
+        if (account == null) {
+            throw new ResourceNotFoundException(EnumAppError.ACCOUNT_NOT_FOUND,
+                    transaction.getAccountNumber());
+        }
+        return account;
     }
 
     public Flux<Account> find(AccountCriteriaDTO accountCriteriaDTO) {

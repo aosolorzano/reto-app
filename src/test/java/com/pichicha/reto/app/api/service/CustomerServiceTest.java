@@ -43,17 +43,8 @@ class CustomerServiceTest extends AbstractContainerBase {
     @Order(1)
     @DisplayName("Create customer")
     void givenCustomerData_whenSave_thenCreateCustomerObject() {
-        Mono<Void> response = this.customerService.create(Mono.just(customerDTO));
+        Mono<CustomerDTO> response = this.customerService.create(Mono.just(customerDTO));
         StepVerifier.create(response)
-                .verifyComplete();
-    }
-
-    @Test
-    @Order(2)
-    @DisplayName("Find created customer")
-    void givenCustomerData_whenFindById_thenReturnCustomerObject() {
-        Mono<CustomerDTO> customerDTOMono = this.customerService.findById(CUSTOMER_ID);
-        StepVerifier.create(customerDTOMono)
                 .assertNext(customerDTO -> {
                     assertThat(customerDTO.getId()).isEqualTo(CUSTOMER_ID);
                     assertThat(customerDTO.getNombre()).isEqualTo("Andres Solorzano");
@@ -66,23 +57,14 @@ class CustomerServiceTest extends AbstractContainerBase {
     }
 
     @Test
-    @Order(3)
+    @Order(2)
     @DisplayName("Update customer")
     void givenCustomerData_whenModifyData_thenUpdateCustomerObject() {
         customerDTO.setNombre("Updated Name");
         customerDTO.setTelefono("1234567890");
         customerDTO.setDireccion("Updated Address");
-        Mono<Void> response = this.customerService.update(customerDTO);
+        Mono<CustomerDTO> response = this.customerService.update(customerDTO);
         StepVerifier.create(response)
-                .verifyComplete();
-    }
-
-    @Test
-    @Order(4)
-    @DisplayName("Find updated customer")
-    void givenUpdatedCustomerData_whenFindById_thenReturnCustomerObject() {
-        Mono<CustomerDTO> customerDTOMono = this.customerService.findById(CUSTOMER_ID);
-        StepVerifier.create(customerDTOMono)
                 .assertNext(customerDTO -> {
                     assertThat(customerDTO.getId()).isEqualTo(CUSTOMER_ID);
                     assertThat(customerDTO.getNombre()).isEqualTo("Updated Name");
@@ -93,7 +75,7 @@ class CustomerServiceTest extends AbstractContainerBase {
     }
 
     @Test
-    @Order(5)
+    @Order(3)
     @DisplayName("Update status")
     void givenCustomerData_whenUpdateStatus_thenUpdateCustomerObject() {
         var customerStatusDTO = CustomerStatusDTO.builder()
@@ -106,7 +88,7 @@ class CustomerServiceTest extends AbstractContainerBase {
     }
 
     @Test
-    @Order(6)
+    @Order(4)
     @DisplayName("Update password")
     void givenCustomerData_whenUpdatePasswd_thenUpdateCustomerObject() {
         var customerPasswordDTO = CustomerPasswordDTO.builder()
@@ -119,7 +101,7 @@ class CustomerServiceTest extends AbstractContainerBase {
     }
 
     @Test
-    @Order(7)
+    @Order(5)
     @DisplayName("Delete customer")
     void givenCustomerData_whenDeleteById_thenDeleteCustomerObject() {
         Mono<Void> voidMono = this.customerService.delete(CUSTOMER_ID);
@@ -128,7 +110,7 @@ class CustomerServiceTest extends AbstractContainerBase {
     }
 
     @Test
-    @Order(8)
+    @Order(6)
     @DisplayName("Find deleted customer")
     void givenDeletedCustomerData_whenFindById_thenReturnException() {
         Mono<CustomerDTO> customerDTOMono = this.customerService.findById(CUSTOMER_ID);
@@ -138,7 +120,7 @@ class CustomerServiceTest extends AbstractContainerBase {
     }
 
     @Test
-    @Order(9)
+    @Order(7)
     @DisplayName("Find customer by Name")
     void givenCustomerData_whenFindByName_thenReturnCustomerObjects() {
         CustomerCriteriaDTO customerCriteriaDTO = CustomerCriteriaDTO.builder()

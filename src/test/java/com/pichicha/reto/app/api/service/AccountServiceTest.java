@@ -1,7 +1,7 @@
 package com.pichicha.reto.app.api.service;
 
 import com.pichicha.reto.app.api.common.AbstractContainerBase;
-import com.pichicha.reto.app.api.dto.common.EntityStatusDTO;
+import com.pichicha.reto.app.api.dto.common.StatusCriteriaDTO;
 import com.pichicha.reto.app.api.exception.ResourceNotFoundException;
 import com.pichicha.reto.app.api.model.Account;
 import com.pichicha.reto.app.api.utils.DataUtil;
@@ -33,7 +33,7 @@ class AccountServiceTest extends AbstractContainerBase {
 
     @BeforeAll
     public static void init() {
-        account = DataUtil.getAccountTemplateDTO();
+        account = DataUtil.getAccountTemplate();
         account.setClienteId(CLIENTE_ID);
     }
 
@@ -74,11 +74,11 @@ class AccountServiceTest extends AbstractContainerBase {
     @Order(3)
     @DisplayName("Update status")
     void givenAccountData_whenUpdateStatus_thenReturnSavedAccountObject() {
-        EntityStatusDTO entityStatusDTO = EntityStatusDTO.builder()
+        StatusCriteriaDTO statusCriteriaDTO = StatusCriteriaDTO.builder()
                 .id(account.getNumeroCuenta())
                 .status(EnumStatus.INA)
                 .build();
-        Mono<Void> voidMono = this.accountService.updateStatus(entityStatusDTO);
+        Mono<Void> voidMono = this.accountService.updateStatus(statusCriteriaDTO);
         StepVerifier.create(voidMono)
                 .verifyComplete();
     }
