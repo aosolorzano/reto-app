@@ -10,7 +10,7 @@ import com.pichicha.reto.app.api.model.Customer;
 import com.pichicha.reto.app.api.repository.CustomerRepository;
 import com.pichicha.reto.app.api.utils.EntityUtil;
 import com.pichicha.reto.app.api.utils.PasswdUtil;
-import com.pichicha.reto.app.api.utils.enums.EnumAppError;
+import com.pichicha.reto.app.api.utils.enums.EnumNotFoundError;
 import com.pichicha.reto.app.api.utils.enums.EnumStatus;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,7 @@ public class CustomerService {
         return Mono.fromSupplier(() ->
                         this.customerRepository.findById(id)
                                 .orElseThrow(() ->
-                                        new ResourceNotFoundException(EnumAppError.CUSTOMER_NOT_FOUND, id)))
+                                        new ResourceNotFoundException(EnumNotFoundError.CUSTOMER_NOT_FOUND, id)))
                 .map(EntityUtil::toCustomerDTO)
                 .subscribeOn(Schedulers.boundedElastic());
     }
@@ -82,7 +82,7 @@ public class CustomerService {
     private Mono<Customer> findEntityById(String customerId) {
         return Mono.fromSupplier(() ->
                 this.customerRepository.findById(customerId).orElseThrow(() ->
-                        new ResourceNotFoundException(EnumAppError.CUSTOMER_NOT_FOUND, customerId)))
+                        new ResourceNotFoundException(EnumNotFoundError.CUSTOMER_NOT_FOUND, customerId)))
                 .subscribeOn(Schedulers.boundedElastic());
     }
 

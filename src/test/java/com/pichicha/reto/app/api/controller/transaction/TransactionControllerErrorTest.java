@@ -64,7 +64,7 @@ class TransactionControllerErrorTest extends AbstractContainerBase {
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
                     assertThat(errorDetailsDTO.getErrorCode())
-                            .isEqualTo(EnumAppError.TRANSACTION_NOT_FOUND.getCode());
+                            .isEqualTo(EnumNotFoundError.TRANSACTION_NOT_FOUND.getCode());
                     assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo(getMessageSourceMessage(EnumLanguageCode.ES));
                 });
@@ -85,7 +85,7 @@ class TransactionControllerErrorTest extends AbstractContainerBase {
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
                     assertThat(errorDetailsDTO.getErrorCode())
-                            .isEqualTo(EnumAppError.TRANSACTION_NOT_FOUND.getCode());
+                            .isEqualTo(EnumNotFoundError.TRANSACTION_NOT_FOUND.getCode());
                     assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo(getMessageSourceMessage(EnumLanguageCode.EN));
                 });
@@ -188,7 +188,7 @@ class TransactionControllerErrorTest extends AbstractContainerBase {
 
     @NotNull
     private String getMessageSourceMessage(EnumLanguageCode enumLanguageCode) {
-        return this.messageSource.getMessage(EnumAppError.TRANSACTION_NOT_FOUND.getMessage(),
+        return this.messageSource.getMessage(EnumNotFoundError.TRANSACTION_NOT_FOUND.getMessage(),
                 new Long[]{NON_EXISTING_ID}, new Locale(enumLanguageCode.getCode()));
     }
 }

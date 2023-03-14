@@ -1,11 +1,14 @@
 package com.pichicha.reto.app.api.controller.transaction;
 
-import com.pichicha.reto.app.api.model.Transaction;
+import com.pichicha.reto.app.api.dto.transaction.TransactionCriteriaDTO;
+import com.pichicha.reto.app.api.dto.transaction.TransactionDTO;
 import com.pichicha.reto.app.api.service.TransactionService;
 import com.pichicha.reto.app.api.utils.ControllerUtil;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
@@ -22,9 +25,9 @@ public class TransactionsController {
         this.transactionService = transactionService;
     }
 
-    @GetMapping
-    public Flux<Transaction> findAll() {
-        LOGGER.debug("findAll() - START");
-        return Flux.empty();
+    @PostMapping()
+    public Flux<TransactionDTO> find(@RequestBody @Valid TransactionCriteriaDTO transactionCriteriaDTO) {
+        LOGGER.debug("find() - START");
+        return this.transactionService.find(transactionCriteriaDTO);
     }
 }

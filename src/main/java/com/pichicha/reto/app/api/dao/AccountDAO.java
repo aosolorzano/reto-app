@@ -1,9 +1,9 @@
 package com.pichicha.reto.app.api.dao;
 
 import com.pichicha.reto.app.api.dto.account.AccountCriteriaDTO;
-import com.pichicha.reto.app.api.exception.SearchException;
+import com.pichicha.reto.app.api.exception.ValidationException;
 import com.pichicha.reto.app.api.model.Account;
-import com.pichicha.reto.app.api.utils.enums.EnumAppError;
+import com.pichicha.reto.app.api.utils.enums.EnumValidationError;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -41,14 +41,17 @@ public class AccountDAO {
         if (Objects.nonNull(accountCriteriaDTO.getCustomerId()) && !accountCriteriaDTO.getCustomerId().isEmpty()) {
             predicates.add(cb.like(accountRoot.get("clienteId"), accountCriteriaDTO.getCustomerId() + "%"));
         }
+        assignPredicates(cq, predicates);
+        return this.entityManager.createQuery(cq).getResultList();
+    }
 
+    private static void assignPredicates(CriteriaQuery<Account> cq, List<Predicate> predicates) {
         if (predicates.isEmpty()) {
-            throw new SearchException(EnumAppError.NO_CRITERIA_FOUND);
+            throw new ValidationException(EnumValidationError.NO_CRITERIA_FOUND);
         } else if (predicates.size() == 1) {
             cq.where(predicates.get(0));
         } else {
             cq.where(predicates.toArray(new Predicate[0]));
         }
-        return this.entityManager.createQuery(cq).getResultList();
     }
 }

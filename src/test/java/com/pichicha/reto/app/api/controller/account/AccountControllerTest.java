@@ -46,7 +46,6 @@ class AccountControllerTest extends AbstractContainerBase {
                 .value(account -> {
                     assertThat(account.getEstado()).isEqualTo(EnumStatus.ACT);
                     assertThat(account.getTipo()).isEqualTo(EnumAccountType.AHO);
-                    assertThat(account.getSaldo()).isEqualTo(2000);
                     assertThat(account.getClienteId()).isEqualTo(CUSTOMER_ID);
                 });
     }

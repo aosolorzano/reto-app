@@ -2,9 +2,9 @@ package com.pichicha.reto.app.api.dao;
 
 import com.pichicha.reto.app.api.dto.customer.CustomerCriteriaDTO;
 import com.pichicha.reto.app.api.dto.customer.CustomerDTO;
-import com.pichicha.reto.app.api.exception.SearchException;
+import com.pichicha.reto.app.api.exception.ValidationException;
 import com.pichicha.reto.app.api.model.Customer;
-import com.pichicha.reto.app.api.utils.enums.EnumAppError;
+import com.pichicha.reto.app.api.utils.enums.EnumValidationError;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.*;
 import org.slf4j.Logger;
@@ -40,15 +40,18 @@ public class CustomerDAO {
         if (Objects.nonNull(customerCriteriaDTO.getName()) && !customerCriteriaDTO.getName().isEmpty()) {
             predicates.add(cb.like(customerRoot.get("nombre"), "%" + customerCriteriaDTO.getName() + "%"));
         }
+        assignPredicates(cq, predicates);
+        return this.entityManager.createQuery(cq).getResultList();
+    }
 
+    private static void assignPredicates(CriteriaQuery<CustomerDTO> cq, List<Predicate> predicates) {
         if (predicates.isEmpty()) {
-            throw new SearchException(EnumAppError.NO_CRITERIA_FOUND);
+            throw new ValidationException(EnumValidationError.NO_CRITERIA_FOUND);
         } else if (predicates.size() == 1) {
             cq.where(predicates.get(0));
         } else {
             cq.where(predicates.toArray(new Predicate[0]));
         }
-        return this.entityManager.createQuery(cq).getResultList();
     }
 
     private static CompoundSelection<CustomerDTO> getCustomerConstruct(CriteriaBuilder cb, Root<Customer> customerRoot) {

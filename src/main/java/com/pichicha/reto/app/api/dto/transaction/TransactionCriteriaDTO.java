@@ -1,19 +1,21 @@
 package com.pichicha.reto.app.api.dto.transaction;
 
-import com.pichicha.reto.app.api.utils.enums.EnumTransactionType;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+import lombok.Data;
 
-import java.time.ZonedDateTime;
+import java.util.Date;
 
+@Data
+@Builder
 public class TransactionCriteriaDTO {
 
-    @NotNull(message = "validation.accounts.id.NotNull.message")
+    @NotNull(message = "validation.account.id.NotNull.message")
     private Long accountNumber;
 
-    private ZonedDateTime fromDate;
+    @NotNull(message = "criteria.fromDate.NotNull.message")
+    private Date fromDate;
 
-    private ZonedDateTime toDate;
-
-    private EnumTransactionType type;
+    private Date toDate;
 
 }

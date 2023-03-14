@@ -4,12 +4,13 @@ import com.pichicha.reto.app.api.dao.AccountDAO;
 import com.pichicha.reto.app.api.dto.account.AccountCriteriaDTO;
 import com.pichicha.reto.app.api.dto.common.StatusCriteriaDTO;
 import com.pichicha.reto.app.api.exception.ResourceNotFoundException;
-import com.pichicha.reto.app.api.exception.TransactionException;
+import com.pichicha.reto.app.api.exception.ValidationException;
 import com.pichicha.reto.app.api.model.Account;
 import com.pichicha.reto.app.api.model.Transaction;
 import com.pichicha.reto.app.api.repository.AccountRepository;
-import com.pichicha.reto.app.api.utils.enums.EnumAppError;
+import com.pichicha.reto.app.api.utils.enums.EnumNotFoundError;
 import com.pichicha.reto.app.api.utils.enums.EnumStatus;
+import com.pichicha.reto.app.api.utils.enums.EnumValidationError;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -30,7 +31,7 @@ public class AccountService {
 
     public Mono<Account> findById(long id) {
         return Mono.fromSupplier(() -> this.accountRepository.findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException(EnumAppError.ACCOUNT_NOT_FOUND, id)))
+                        .orElseThrow(() -> new ResourceNotFoundException(EnumNotFoundError.ACCOUNT_NOT_FOUND, id)))
                 .subscribeOn(Schedulers.boundedElastic());
     }
 
@@ -49,11 +50,11 @@ public class AccountService {
     public Account updateBalance(Long accountId, Double newBalance) {
         Account actualAccount = this.accountRepository.findById(accountId).orElse(null);
         if (Objects.isNull(actualAccount)) {
-            throw new ResourceNotFoundException(EnumAppError.ACCOUNT_NOT_FOUND, accountId);
+            throw new ResourceNotFoundException(EnumNotFoundError.ACCOUNT_NOT_FOUND, accountId);
         } else if (newBalance < 0) {
-            throw new TransactionException(EnumAppError.INSUFFICIENT_BALANCE);
+            throw new ValidationException(EnumValidationError.INSUFFICIENT_BALANCE);
         } else if (!actualAccount.getEstado().equals(EnumStatus.ACT)) {
-            throw new TransactionException(EnumAppError.NOT_ACTIVE_ACCOUNT);
+            throw new ValidationException(EnumValidationError.NOT_ACTIVE_ACCOUNT);
         }
         actualAccount.setSaldo(newBalance);
         return this.accountRepository.save(actualAccount);
@@ -68,7 +69,7 @@ public class AccountService {
     public Account findByTransaction(Transaction transaction) {
         Account account = this.accountRepository.findById(transaction.getAccountNumber()).orElse(null);
         if (account == null) {
-            throw new ResourceNotFoundException(EnumAppError.ACCOUNT_NOT_FOUND,
+            throw new ResourceNotFoundException(EnumNotFoundError.ACCOUNT_NOT_FOUND,
                     transaction.getAccountNumber());
         }
         return account;

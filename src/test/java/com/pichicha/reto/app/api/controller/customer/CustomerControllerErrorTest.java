@@ -5,7 +5,7 @@ import com.pichicha.reto.app.api.dto.common.ErrorDetailsDTO;
 import com.pichicha.reto.app.api.dto.customer.CustomerDTO;
 import com.pichicha.reto.app.api.utils.ControllerUtil;
 import com.pichicha.reto.app.api.utils.DataUtil;
-import com.pichicha.reto.app.api.utils.enums.EnumAppError;
+import com.pichicha.reto.app.api.utils.enums.EnumNotFoundError;
 import com.pichicha.reto.app.api.utils.enums.EnumLanguageCode;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -51,7 +51,7 @@ class CustomerControllerErrorTest extends AbstractContainerBase {
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
                     Assertions.assertThat(errorDetailsDTO.getErrorCode())
-                            .isEqualTo(EnumAppError.CUSTOMER_NOT_FOUND.getCode());
+                            .isEqualTo(EnumNotFoundError.CUSTOMER_NOT_FOUND.getCode());
                     Assertions.assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo("No se encontró el cliente con ID: " + customerDTO.getId() + ".");
                 });
@@ -69,7 +69,7 @@ class CustomerControllerErrorTest extends AbstractContainerBase {
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
                     Assertions.assertThat(errorDetailsDTO.getErrorCode())
-                            .isEqualTo(EnumAppError.CUSTOMER_NOT_FOUND.getCode());
+                            .isEqualTo(EnumNotFoundError.CUSTOMER_NOT_FOUND.getCode());
                     Assertions.assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo("Customer not found with ID: " + customerDTO.getId() + ".");
                 });
@@ -88,7 +88,7 @@ class CustomerControllerErrorTest extends AbstractContainerBase {
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
                     Assertions.assertThat(errorDetailsDTO.getErrorCode())
-                            .isEqualTo(EnumAppError.CUSTOMER_NOT_FOUND.getCode());
+                            .isEqualTo(EnumNotFoundError.CUSTOMER_NOT_FOUND.getCode());
                     Assertions.assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo("No se encontró el cliente con ID: " + customerDTO.getId() + ".");
                 });
@@ -107,7 +107,7 @@ class CustomerControllerErrorTest extends AbstractContainerBase {
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
                     Assertions.assertThat(errorDetailsDTO.getErrorCode())
-                            .isEqualTo(EnumAppError.CUSTOMER_NOT_FOUND.getCode());
+                            .isEqualTo(EnumNotFoundError.CUSTOMER_NOT_FOUND.getCode());
                     Assertions.assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo("Customer not found with ID: " + customerDTO.getId() + ".");
                 });
@@ -125,7 +125,7 @@ class CustomerControllerErrorTest extends AbstractContainerBase {
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
                     Assertions.assertThat(errorDetailsDTO.getErrorCode())
-                            .isEqualTo(EnumAppError.CUSTOMER_NOT_FOUND.getCode());
+                            .isEqualTo(EnumNotFoundError.CUSTOMER_NOT_FOUND.getCode());
                     Assertions.assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo("No se encontró el cliente con ID: " + customerDTO.getId() + ".");
                 });
@@ -143,7 +143,7 @@ class CustomerControllerErrorTest extends AbstractContainerBase {
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
                     Assertions.assertThat(errorDetailsDTO.getErrorCode())
-                            .isEqualTo(EnumAppError.CUSTOMER_NOT_FOUND.getCode());
+                            .isEqualTo(EnumNotFoundError.CUSTOMER_NOT_FOUND.getCode());
                     Assertions.assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo("Customer not found with ID: " + customerDTO.getId() + ".");
                 });

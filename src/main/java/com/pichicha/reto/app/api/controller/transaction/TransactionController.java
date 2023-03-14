@@ -11,10 +11,12 @@ import com.pichicha.reto.app.api.utils.EntityUtil;
 import jakarta.validation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -25,6 +27,9 @@ public class TransactionController {
     private static final Logger LOGGER = LoggerFactory.getLogger(TransactionController.class);
 
     private final TransactionService transactionService;
+
+    @Value("${reto.time.zone.id:-05:00}")
+    private String zoneId;
 
     public TransactionController(TransactionService transactionService) {
         this.transactionService = transactionService;
@@ -57,7 +62,7 @@ public class TransactionController {
 
     private TransactionResponseDTO getResponseDTO(TransactionDTO transaction) {
         return TransactionResponseDTO.builder()
-                .date(ZonedDateTime.now())
+                .date(ZonedDateTime.now(ZoneId.of(zoneId)))
                 .transactions(List.of(transaction))
                 .build();
     }

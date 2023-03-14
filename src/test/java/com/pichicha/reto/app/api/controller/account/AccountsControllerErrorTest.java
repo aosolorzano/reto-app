@@ -1,8 +1,8 @@
-package com.pichicha.reto.app.api.controller.customer;
+package com.pichicha.reto.app.api.controller.account;
 
 import com.pichicha.reto.app.api.common.AbstractContainerBase;
+import com.pichicha.reto.app.api.dto.account.AccountCriteriaDTO;
 import com.pichicha.reto.app.api.dto.common.ErrorDetailsDTO;
-import com.pichicha.reto.app.api.dto.customer.CustomerCriteriaDTO;
 import com.pichicha.reto.app.api.utils.ControllerUtil;
 import com.pichicha.reto.app.api.utils.enums.EnumLanguageCode;
 import com.pichicha.reto.app.api.utils.enums.EnumValidationError;
@@ -22,19 +22,19 @@ import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestPropertySource(locations = "classpath:application-test.properties")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CustomersControllerErrorTest extends AbstractContainerBase {
+class AccountsControllerErrorTest extends AbstractContainerBase {
 
     @Autowired
     private WebTestClient webTestClient;
 
     @Test
     @Order(1)
-    @DisplayName("Find customers with empty criteria - Spanish")
-    void givenCustomerData_whenFindByEmptyCriteria_thenReturnError() {
-        CustomerCriteriaDTO customerCriteriaDTO = CustomerCriteriaDTO.builder().build();
+    @DisplayName("Find accounts with empty criteria - Spanish")
+    void givenAccountsData_whenFindByEmptyCriteria_thenReturnError() {
+        AccountCriteriaDTO customerCriteriaDTO = AccountCriteriaDTO.builder().build();
         this.webTestClient
                 .post()
-                .uri(ControllerUtil.CUSTOMERS_PATH)
+                .uri(ControllerUtil.ACCOUNTS_PATH)
                 .bodyValue(customerCriteriaDTO)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.ES.getCode())
                 .exchange()
@@ -50,12 +50,12 @@ class CustomersControllerErrorTest extends AbstractContainerBase {
 
     @Test
     @Order(2)
-    @DisplayName("Find customers with empty criteria - English")
-    void givenCustomerData_whenFindByEmptyCriteria_thenReturnErrorInEnglish() {
-        CustomerCriteriaDTO customerCriteriaDTO = CustomerCriteriaDTO.builder().build();
+    @DisplayName("Find accounts with empty criteria - English")
+    void givenAccountsData_whenFindByEmptyCriteria_thenReturnErrorInEnglish() {
+        AccountCriteriaDTO customerCriteriaDTO = AccountCriteriaDTO.builder().build();
         this.webTestClient
                 .post()
-                .uri(ControllerUtil.CUSTOMERS_PATH)
+                .uri(ControllerUtil.ACCOUNTS_PATH)
                 .bodyValue(customerCriteriaDTO)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, EnumLanguageCode.EN.getCode())
                 .exchange()

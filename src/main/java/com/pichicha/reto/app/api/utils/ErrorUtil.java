@@ -7,7 +7,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 public final class ErrorUtil {
 
@@ -20,7 +19,7 @@ public final class ErrorUtil {
                                                     String errorCode,
                                                     String zoneId) {
         return ErrorDetailsDTO.builder()
-                .errorDate(ZonedDateTime.now(TimeZone.getTimeZone(ZoneId.of(zoneId)).toZoneId()))
+                .errorDate(ZonedDateTime.now(ZoneId.of(zoneId)))
                 .requestedPath(exchange.getRequest().getPath().toString())
                 .errorMessage(errorMessage)
                 .errorCode(errorCode)

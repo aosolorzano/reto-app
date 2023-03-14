@@ -7,7 +7,7 @@ import com.pichicha.reto.app.api.dto.common.ErrorDetailsDTO;
 import com.pichicha.reto.app.api.model.Account;
 import com.pichicha.reto.app.api.utils.ControllerUtil;
 import com.pichicha.reto.app.api.utils.DataUtil;
-import com.pichicha.reto.app.api.utils.enums.EnumAppError;
+import com.pichicha.reto.app.api.utils.enums.EnumNotFoundError;
 import com.pichicha.reto.app.api.utils.enums.EnumLanguageCode;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeAll;
@@ -64,7 +64,7 @@ class AccountControllerErrorTest extends AbstractContainerBase {
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
                     assertThat(errorDetailsDTO.getErrorCode())
-                            .isEqualTo(EnumAppError.ACCOUNT_NOT_FOUND.getCode());
+                            .isEqualTo(EnumNotFoundError.ACCOUNT_NOT_FOUND.getCode());
                     assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo(getMessageSourceMessage(EnumLanguageCode.ES));
                 });
@@ -83,7 +83,7 @@ class AccountControllerErrorTest extends AbstractContainerBase {
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
                     assertThat(errorDetailsDTO.getErrorCode())
-                            .isEqualTo(EnumAppError.ACCOUNT_NOT_FOUND.getCode());
+                            .isEqualTo(EnumNotFoundError.ACCOUNT_NOT_FOUND.getCode());
                     assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo(getMessageSourceMessage(EnumLanguageCode.EN));
                 });
@@ -106,7 +106,7 @@ class AccountControllerErrorTest extends AbstractContainerBase {
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
                     assertThat(errorDetailsDTO.getErrorCode())
-                            .isEqualTo(EnumAppError.ACCOUNT_NOT_FOUND.getCode());
+                            .isEqualTo(EnumNotFoundError.ACCOUNT_NOT_FOUND.getCode());
                     assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo(getMessageSourceMessage(EnumLanguageCode.ES));
                 });
@@ -129,7 +129,7 @@ class AccountControllerErrorTest extends AbstractContainerBase {
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
                     assertThat(errorDetailsDTO.getErrorCode())
-                            .isEqualTo(EnumAppError.ACCOUNT_NOT_FOUND.getCode());
+                            .isEqualTo(EnumNotFoundError.ACCOUNT_NOT_FOUND.getCode());
                     assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo(getMessageSourceMessage(EnumLanguageCode.EN));
                 });
@@ -148,7 +148,7 @@ class AccountControllerErrorTest extends AbstractContainerBase {
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
                     assertThat(errorDetailsDTO.getErrorCode())
-                            .isEqualTo(EnumAppError.ACCOUNT_NOT_FOUND.getCode());
+                            .isEqualTo(EnumNotFoundError.ACCOUNT_NOT_FOUND.getCode());
                     assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo(getMessageSourceMessage(EnumLanguageCode.ES));
                 });
@@ -167,7 +167,7 @@ class AccountControllerErrorTest extends AbstractContainerBase {
                 .expectBody(ErrorDetailsDTO.class)
                 .value(errorDetailsDTO -> {
                     assertThat(errorDetailsDTO.getErrorCode())
-                            .isEqualTo(EnumAppError.ACCOUNT_NOT_FOUND.getCode());
+                            .isEqualTo(EnumNotFoundError.ACCOUNT_NOT_FOUND.getCode());
                     assertThat(errorDetailsDTO.getErrorMessage())
                             .isEqualTo(getMessageSourceMessage(EnumLanguageCode.EN));
                 });
@@ -175,7 +175,7 @@ class AccountControllerErrorTest extends AbstractContainerBase {
 
     @NotNull
     private String getMessageSourceMessage(EnumLanguageCode enumLanguageCode) {
-        return this.messageSource.getMessage(EnumAppError.ACCOUNT_NOT_FOUND.getMessage(),
+        return this.messageSource.getMessage(EnumNotFoundError.ACCOUNT_NOT_FOUND.getMessage(),
                 new Long[]{account.getNumeroCuenta()}, new Locale(enumLanguageCode.getCode()));
     }
 }
